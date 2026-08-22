@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Amr & Mayaa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Dancing+Script:wght@700&family=Tajawal:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Cairo', sans-serif; background-color: #4A121A; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath fill='%23EAE0D0' fill-opacity='0.06' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35zM42 51.35l-1.45-1.32C35.4 45.36 32 42.28 32 38.5 32 35.42 34.42 33 37.5 33c1.74 0 3.41.81 4.5 2.09C43.09 33.81 44.76 33 46.5 33 49.58 33 52 35.42 52 38.5c0 3.78-3.4 6.86-8.55 11.54L42 51.35z'/%3E%3C/svg%3E"); background-size: 60px 60px; color: #EAE0D0; min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        .page { min-height: 100vh; padding: 40px 10px; text-align: center; display: none; flex-direction: column; align-items: center; justify-content: flex-start; gap: 25px; position: relative; width: 100%; max-width: 100vw; }
+        #main-page { display: flex; }
+        .back-btn { background-color: transparent; color: #EAE0D0; border: 2px solid #EAE0D0; padding: 8px 20px; border-radius: 15px; cursor: pointer; font-family: 'Cairo', sans-serif; font-weight: bold; margin-bottom: 10px; align-self: flex-start; z-index: 10; touch-action: manipulation; }
+        .torn-paper-note { background-color: #EAE0D0; color: #4A121A; padding: 10px 15px; margin-bottom: 15px; width: 100%; max-width: 350px; font-family: 'Cairo', sans-serif; font-size: 13px; font-weight: bold; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 8px 20px rgba(0,0,0,0.4); position: relative; clip-path: polygon(0% 4%, 3% 0%, 7% 5%, 12% 1%, 17% 4%, 22% 1%, 28% 5%, 33% 2%, 39% 5%, 44% 1%, 50% 4%, 55% 1%, 61% 5%, 66% 2%, 72% 4%, 77% 1%, 83% 5%, 88% 2%, 94% 4%, 98% 1%, 100% 4%, 99% 15%, 100% 30%, 98% 45%, 100% 60%, 99% 75%, 100% 90%, 98% 97%, 95% 100%, 90% 96%, 85% 99%, 80% 95%, 74% 98%, 68% 95%, 62% 99%, 56% 96%, 50% 99%, 44% 95%, 38% 99%, 32% 96%, 26% 99%, 20% 95%, 14% 99%, 8% 96%, 3% 99%, 0% 96%, 1% 85%, 0% 70%, 2% 55%, 0% 40%, 1% 25%, 0% 10%); }
+        .torn-paper-box { background-color: #EAE0D0; color: #4A121A; padding: 18px 25px; width: 100%; max-width: 420px; font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: bold; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.4); position: relative; display: none; margin-top: 25px; line-height: 1.6; direction: ltr; clip-path: polygon(0% 4%, 3% 0%, 7% 5%, 12% 1%, 17% 4%, 22% 1%, 28% 5%, 33% 2%, 39% 5%, 44% 1%, 50% 4%, 55% 1%, 61% 5%, 66% 2%, 72% 4%, 77% 1%, 83% 5%, 88% 2%, 94% 4%, 98% 1%, 100% 4%, 99% 15%, 100% 30%, 98% 45%, 100% 60%, 99% 75%, 100% 90%, 98% 97%, 95% 100%, 90% 96%, 85% 99%, 80% 95%, 74% 98%, 68% 95%, 62% 99%, 56% 96%, 50% 99%, 44% 95%, 38% 99%, 32% 96%, 26% 99%, 20% 95%, 14% 99%, 8% 96%, 3% 99%, 0% 96%, 1% 85%, 0% 70%, 2% 55%, 0% 40%, 1% 25%, 0% 10%); }
+        .slider-window { background-color: transparent; padding: 0; border-radius: 0; width: 100%; max-width: 300px; box-shadow: none; transform: translateZ(0); }
+        .slider-wrapper { position: relative; width: 100%; height: 370px; display: flex; justify-content: center; align-items: center; overflow: visible; }
+        .slide { position: absolute; width: 250px; height: 330px; background-color: #EAE0D0; padding: 6px 6px 30px 6px; border-radius: 12px; object-fit: cover; transition: all 0.5s ease-in-out; box-shadow: 0 15px 35px rgba(0,0,0,0.4); opacity: 0; transform: scale(0.5); z-index: 1; will-change: transform, opacity; }
+        .landscape { width: 265px !important; height: 285px !important; padding: 5px 5px 25px 5px !important; object-fit: contain !important; background-color: #EAE0D0 !important; }
+        .slide-7 { width: 260px !important; height: 290px !important; padding: 6px 6px 26px 6px !important; object-fit: contain !important; background-color: #EAE0D0 !important; }
+        .slide.active { opacity: 1; transform: translateX(0) scale(1); z-index: 3; }
+        .slide.next { opacity: 0.4; transform: translateX(-120px) scale(0.75); z-index: 2; filter: blur(5px); }
+        .slide.prev { opacity: 0.4; transform: translateX(120px) scale(0.75); z-index: 2; filter: blur(5px); }
+        .nav-btn { position: absolute; top: 50%; transform: translateY(-50%); background-color: #EAE0D0; color: #4A121A; border: none; width: 38px; height: 38px; border-radius: 50%; font-size: 18px; cursor: pointer; z-index: 10; display: flex; justify-content: center; align-items: center; padding-bottom: 3px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); transition: transform 0.1s; touch-action: manipulation; }
+        .nav-btn:active { transform: translateY(-50%) scale(0.9); }
+        .right-btn { right: -2px; }
+        .left-btn { left: -2px; }
+        #timer-section { width: 100%; max-width: 380px; text-align: center; margin-top: 10px; }
+        #timer-section h3 { margin: 0 0 15px 0; font-size: 18px; color: rgba(234,224,208,0.9); font-weight: 400; }
+        .timer-container { display: flex; justify-content: space-between; gap: 10px; direction: ltr; }
+        .time-box { display: flex; flex-direction: column; align-items: center; background-color: #EAE0D0; padding: 10px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); flex: 1; }
+        .time-box span.num { font-size: 24px; font-weight: bold; color: #4A121A; }
+        .time-box span.label { font-size: 13px; color: #6a1f2d; margin-top: 2px; font-weight: bold; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        #music-section { width: 100%; max-width: 500px; display: flex; justify-content: center; align-items: center; margin-top: 10px; }
+        .player-card { background: #5e1a2e; width: 100%; padding: 25px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.5); direction: ltr; }
+        .top-section { display: flex; align-items: center; gap: 20px; margin-bottom: 20px; }
+        .collage { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 4px; width: 130px; height: 130px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        .collage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .controls-area { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 14px; min-width: 0; }
+        .title { font-size: 16px; font-weight: bold; color: #f5d0c5; font-family: 'Cairo', sans-serif; text-align: center; }
+        .buttons { display: flex; align-items: center; gap: 24px; }
+        .btn { background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #d4c4c4; transition: transform 0.15s, color 0.15s; padding: 0; touch-action: manipulation; }
+        .btn:hover { transform: scale(1.08); color: #e8dede; }
+        .btn svg { display: block; }
+        .btn-skip { width: 28px; height: 28px; }
+        .btn-play { width: 44px; height: 44px; border-radius: 50%; background: #EAE0D0; color: #4A121A; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .btn-play svg { fill: #4A121A; width: 18px; height: 18px; margin-left: 2px; }
+        .btn-play:hover { color: #4A121A; transform: scale(1.05); }
+        .progress-section { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+        .progress-track { width: 100%; height: 6px; background: rgba(212,196,196,0.25); border-radius: 3px; position: relative; overflow: hidden; cursor: pointer; }
+        .song-progress-new { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 5; -webkit-appearance: none; appearance: none; margin: 0; }
+        .progress-fill { width: 0%; height: 100%; background: #d4c4c4; border-radius: 2px; transition: width 0.1s linear; }
+        .time-row { display: flex; justify-content: space-between; font-size: 11px; color: #d4c4c4; padding: 0 2px; font-family: 'Segoe UI', Tahoma, sans-serif; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .vinyl { width: 110px; height: 110px; border-radius: 50%; background: repeating-radial-gradient(circle at center, #1a1a1a 0px, #1a1a1a 8px, #333 9px, #333 10px); position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.5); flex-shrink: 0; animation: spin 3.5s linear infinite; animation-play-state: paused; will-change: transform; }
+        .vinyl.playing { animation-play-state: running; }
+        .vinyl::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 32px; height: 32px; background: #8b252c; border-radius: 50%; border: 3px solid #1a1a1a; }
+        .playlist { list-style: none; background-color: #3b0c11; padding: 15px 20px; border-radius: 12px; margin-top: 15px; }
+        .playlist li { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 15px; cursor: pointer; color: rgba(234,224,208,0.7); font-family: 'Cairo', sans-serif; gap: 10px; }
+        .playlist li:last-child { border-bottom: none; }
+        .playlist li:hover { color: #EAE0D0; }
+        .playlist li.active-track { color: #EAE0D0; font-weight: bold; }
+        .action-row { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; width: 100%; flex-wrap: wrap; }
+        .btn-small { background: #EAE0D0; color: #4A121A; border: 2px solid #4A121A; padding: 14px 28px; border-radius: 30px; font-family: 'Cairo', sans-serif; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 6px 15px rgba(0,0,0,0.4); animation: pulse 2s infinite ease-in-out; transition: transform 0.2s, box-shadow 0.2s; display: flex; align-items: center; gap: 8px; touch-action: manipulation; }
+        .btn-small:active { transform: scale(0.95); box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+        #curtain-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 4000; display: none; pointer-events: none; }
+        .curtain-panel { position: absolute; top: 0; width: 50%; height: 100%; background: linear-gradient(135deg, #300a11, #4A121A, #24050a); box-shadow: inset 0 0 50px rgba(0,0,0,0.8); transition: transform 1.8s cubic-bezier(0.77,0,0.175,1); z-index: 2; will-change: transform; }
+        .curtain-left { left: 0; border-right: 2px solid rgba(234,224,208,0.3); }
+        .curtain-right { right: 0; border-left: 2px solid rgba(234,224,208,0.3); }
+        .curtain-open .curtain-left { transform: translateX(-100%); }
+        .curtain-open .curtain-right { transform: translateX(100%); }
+        #countdown-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 80px; font-family: 'Dancing Script', cursive; color: #EAE0D0; z-index: 10; text-shadow: 0 0 20px rgba(234,224,208,0.8); pointer-events: none; }
+        #spotlight-box { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0); z-index: 60; display: flex; flex-direction: column; align-items: center; gap: 10px; opacity: 0; transition: transform 0.6s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease; pointer-events: none; will-change: transform, opacity; }
+        #spotlight-box.active { opacity: 1; transform: translate(-50%,-50%) scale(1); pointer-events: auto; }
+        .spotlight-sticker-img { width: 170px; height: 170px; object-fit: cover; border-radius: 50%; box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        .spotlight-sticker-text { background-color: #EAE0D0; color: #4A121A; font-size: 14px; font-weight: 700; font-family: 'Cairo', sans-serif; padding: 3px 14px; border-radius: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.5); display: flex; align-items: center; gap: 6px; direction: ltr; }
+        .circle-stage { position: relative; width: 440px; height: 440px; margin: auto; display: flex; justify-content: center; align-items: center; transition: transform 1s cubic-bezier(0.34,1.56,0.64,1); max-width: 100%; }
+        .circle-stage.expanded { transform: scale(1.15); }
+        @keyframes rotateOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes counterRotate { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
+        .orbit-ring { position: absolute; width: 100%; height: 100%; animation: rotateOrbit 25s linear infinite; transition: filter 0.4s ease, opacity 0.4s ease; will-change: transform; transform: translateZ(0); }
+        .orbit-ring.blurred { filter: blur(8px); opacity: 0.35; }
+        .orbit-img-wrapper { position: absolute; top: 50%; left: 50%; margin-top: -65px; margin-left: -50px; opacity: 0; transform: scale(0); transition: all 0.8s cubic-bezier(0.34,1.56,0.64,1); display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
+        .orbit-img-wrapper.pos-1.revealed { transform: translate(0px,-165px) scale(1); opacity: 1; }
+        .orbit-img-wrapper.pos-2.revealed { transform: translate(157px,-51px) scale(1); opacity: 1; }
+        .orbit-img-wrapper.pos-3.revealed { transform: translate(97px,133px) scale(1); opacity: 1; }
+        .orbit-img-wrapper.pos-4.revealed { transform: translate(-97px,133px) scale(1); opacity: 1; }
+        .orbit-img-wrapper.pos-5.revealed { transform: translate(-157px,-51px) scale(1); opacity: 1; }
+        .sticker-item { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 8px; animation: counterRotate 25s linear infinite; will-change: transform; transform: translateZ(0); }
+        .sticker-item img { width: 90px; height: 90px; object-fit: cover; border-radius: 50%; box-shadow: 0 8px 20px rgba(0,0,0,0.5); border: 3px solid #EAE0D0; background: transparent; }
+        .sticker-text { background-color: #EAE0D0; color: #4A121A; font-size: 11px; font-weight: 700; font-family: 'Cairo', sans-serif; padding: 3px 12px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.4); white-space: nowrap; display: flex; align-items: center; gap: 4px; direction: ltr; }
+        @keyframes giftWiggle { 0% { transform: rotate(0deg) scale(1); } 15% { transform: rotate(-12deg) scale(1.05); } 30% { transform: rotate(10deg) scale(1.05); } 45% { transform: rotate(-8deg) scale(1.05); } 60% { transform: rotate(6deg) scale(1.05); } 75% { transform: rotate(-3deg) scale(1.02); } 100% { transform: rotate(0deg) scale(1); } }
+        .center-gift-box { position: absolute; width: 140px; height: 140px; z-index: 50; opacity: 0; transform: scale(0); transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1); display: flex; flex-direction: column; justify-content: center; align-items: center; cursor: pointer; will-change: transform, opacity; touch-action: manipulation; }
+        .center-gift-box.revealed { opacity: 1; transform: scale(1); }
+        .center-gift-box.revealed .gift-img { animation: giftWiggle 1.4s 5 ease-in-out; }
+        .gift-img { width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6)); transition: transform 0.2s; }
+        .center-gift-box:active .gift-img { transform: scale(0.92); }
+        .gift-hint { margin-top: 5px; font-size: 13px; font-weight: bold; color: #EAE0D0; text-shadow: 0 2px 5px rgba(0,0,0,0.8); font-family: 'Cairo', sans-serif; direction: ltr; }
+        @keyframes wiggle { 0%,100% { transform: rotate(-5deg) scale(1); } 50% { transform: rotate(5deg) scale(1.04); } }
+        .wiggle-active { animation: wiggle 2s infinite ease-in-out !important; }
+        #login-overlay, #welcome-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #4A121A; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath fill='%23EAE0D0' fill-opacity='0.06' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35zM42 51.35l-1.45-1.32C35.4 45.36 32 42.28 32 38.5 32 35.42 34.42 33 37.5 33c1.74 0 3.41.81 4.5 2.09C43.09 33.81 44.76 33 46.5 33 49.58 33 52 35.42 52 38.5c0 3.78-3.4 6.86-8.55 11.54L42 51.35z'/%3E%3C/svg%3E"); background-size: 60px 60px; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 3000; padding: 20px; }
+        #welcome-screen { display: none; z-index: 2500; text-align: center; }
+        .safe-title { font-family: 'Dancing Script', cursive; color: #EAE0D0; font-size: 42px; margin-bottom: 15px; text-align: center; line-height: 1.1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .login-box { background-color: #360D13; padding: 30px 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); width: 100%; max-width: 330px; text-align: center; border: 2px solid #EAE0D0; }
+        .login-box h2 { color: #EAE0D0; margin-bottom: 20px; font-size: 18px; font-weight: 400; }
+        .pin-display { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; direction: ltr; }
+        .pin-box { width: 55px; height: 60px; border: 2px solid #EAE0D0; border-radius: 12px; display: flex; justify-content: center; align-items: center; font-size: 26px; color: #EAE0D0; background-color: transparent; font-weight: bold; }
+        .keypad { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 10px; direction: ltr; }
+        .key-btn { background-color: transparent; color: #EAE0D0; border: 2px solid #EAE0D0; border-radius: 50%; width: 65px; height: 65px; font-size: 22px; font-weight: bold; display: flex; justify-content: center; align-items: center; margin: 0 auto; cursor: pointer; font-family: 'Cairo', sans-serif; transition: 0.15s; touch-action: manipulation; }
+        .key-btn:active { background-color: rgba(234,224,208,0.2); transform: scale(0.92); }
+        .action-key { background-color: #EAE0D0 !important; color: #4A121A !important; font-size: 18px; font-weight: bold; }
+        #error-msg { color: #EAE0D0; font-size: 14px; display: none; margin-top: 15px; font-weight: bold; }
+        .sub-card { background-color: #EAE0D0; color: #4A121A; padding: 30px 20px; border-radius: 20px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.6); border: 2px dashed #4A121A; margin-top: 15px; }
+        .sub-card h3 { font-family: 'Dancing Script', cursive; font-size: 28px; margin-top: 0; }
+        .sub-card p { font-size: 16px; line-height: 1.6; margin-bottom: 12px; font-family: 'Cairo', sans-serif; }
+        @media (max-width: 480px) {
+            .page { padding: 20px 8px; gap: 15px; }
+            .safe-title { font-size: 28px; margin-bottom: 10px; }
+            .login-box { padding: 20px 15px; max-width: 300px; }
+            .login-box h2 { font-size: 15px; margin-bottom: 15px; }
+            .pin-box { width: 45px; height: 50px; font-size: 22px; }
+            .key-btn { width: 55px; height: 55px; font-size: 20px; }
+            .pin-display { gap: 8px; margin-bottom: 18px; }
+            .slider-wrapper { height: 280px; }
+            .slide { width: 180px; height: 240px; padding: 5px 5px 22px 5px; }
+            .landscape { width: 200px !important; height: 220px !important; padding: 4px 4px 20px 4px !important; }
+            .slide-7 { width: 190px !important; height: 220px !important; padding: 5px 5px 22px 5px !important; }
+            .slide.next { transform: translateX(-85px) scale(0.75); filter: blur(2px); }
+            .slide.prev { transform: translateX(85px) scale(0.75); filter: blur(2px); }
+            .nav-btn { width: 32px; height: 32px; font-size: 14px; }
+            #timer-section h3 { font-size: 15px; }
+            .time-box span.num { font-size: 20px; }
+            .time-box span.label { font-size: 11px; }
+            .time-box { padding: 8px 5px; }
+            .player-card { padding: 15px; border-radius: 16px; }
+            .top-section { gap: 12px; margin-bottom: 15px; }
+            .collage { width: 85px; height: 85px; gap: 3px; border-radius: 8px; }
+            .vinyl { width: 75px; height: 75px; }
+            .vinyl::after { width: 22px; height: 22px; }
+            .title { font-size: 12px; }
+            .buttons { gap: 16px; }
+            .btn-skip { width: 24px; height: 24px; }
+            .btn-play { width: 38px; height: 38px; }
+            .btn-play svg { width: 15px; height: 15px; }
+            .progress-track { height: 5px; }
+            .time-row { font-size: 10px; }
+            .playlist { padding: 12px 15px; margin-top: 12px; }
+            .playlist li { font-size: 13px; padding: 8px 0; }
+            .btn-small { padding: 12px 20px; font-size: 14px; border-radius: 25px; }
+            .circle-stage { width: 300px; height: 300px; }
+            .circle-stage.expanded { transform: scale(1.03); }
+            .orbit-ring.blurred { filter: blur(2px); opacity: 0.3; }
+            .orbit-img-wrapper.pos-1.revealed { transform: translate(0px,-90px) scale(1); opacity: 1; }
+            .orbit-img-wrapper.pos-2.revealed { transform: translate(100px,-35px) scale(1); opacity: 1; }
+            .orbit-img-wrapper.pos-3.revealed { transform: translate(62px,88px) scale(1); opacity: 1; }
+            .orbit-img-wrapper.pos-4.revealed { transform: translate(-62px,88px) scale(1); opacity: 1; }
+            .orbit-img-wrapper.pos-5.revealed { transform: translate(-100px,-35px) scale(1); opacity: 1; }
+            .sticker-item img { width: 65px; height: 65px; border: 2px solid #EAE0D0; }
+            .sticker-text { font-size: 10px; padding: 2px 10px; }
+            .spotlight-sticker-img { width: 120px; height: 120px; }
+            .spotlight-sticker-text { font-size: 12px; padding: 2px 12px; }
+            .center-gift-box { width: 100px; height: 100px; }
+            .gift-img { width: 70px; height: 70px; }
+            .gift-hint { font-size: 11px; }
+            #countdown-overlay { font-size: 60px; }
+            .sub-card { padding: 20px 15px; }
+            .sub-card h3 { font-size: 22px; }
+            .sub-card p { font-size: 14px; }
+            .torn-paper-box { padding: 14px 18px; }
+            .torn-paper-note { font-size: 11px; padding: 8px 12px; }
+        }
+
+        /* ===== Mobile / Responsive visual upgrade ===== */
+        .main-page {
+            width: 100%;
+        }
+
+        /* Main gallery: make the hero photos much larger and taller */
+        #main-page {
+            padding: 30px 8px 50px;
+            gap: 24px;
+        }
+
+        .torn-paper-note {
+            max-width: 92vw;
+            font-size: 15px;
+            padding: 12px 18px;
+            margin-bottom: 8px;
+        }
+
+        .slider-window {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .slider-wrapper {
+            width: 100%;
+            height: 455px;
+        }
+
+        .slide {
+            width: 300px;
+            height: 405px;
+            padding: 7px 7px 34px 7px;
+            border-radius: 16px;
+            box-shadow: 0 18px 40px rgba(0,0,0,0.48);
+        }
+
+        .landscape {
+            width: 320px !important;
+            height: 365px !important;
+            padding: 6px 6px 28px 6px !important;
+        }
+
+        .slide-7 {
+            width: 315px !important;
+            height: 370px !important;
+            padding: 7px 7px 30px 7px !important;
+        }
+
+        .slide.next {
+            transform: translateX(-155px) scale(0.72);
+            filter: blur(5px);
+        }
+
+        .slide.prev {
+            transform: translateX(155px) scale(0.72);
+            filter: blur(5px);
+        }
+
+        .nav-btn {
+            width: 48px;
+            height: 48px;
+            font-size: 22px;
+            z-index: 20;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+        }
+
+        .right-btn { right: 2px; }
+        .left-btn { left: 2px; }
+
+        /* Countdown gets more breathing room */
+        #timer-section {
+            max-width: 94vw;
+            margin-top: 4px;
+        }
+
+        #timer-section h3 {
+            margin-bottom: 16px;
+            font-size: 22px;
+        }
+
+        .timer-container {
+            gap: 10px;
+        }
+
+        .time-box {
+            min-height: 105px;
+            padding: 12px 7px;
+            border-radius: 15px;
+        }
+
+        .time-box span.num {
+            font-size: 27px;
+        }
+
+        .time-box span.label {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        /* Music card: wider, taller and with guaranteed visible skip buttons */
+        #music-section {
+            max-width: 94vw;
+            margin-top: 2px;
+        }
+
+        .player-card {
+            padding: 20px 16px 18px;
+            border-radius: 20px;
+        }
+
+        .top-section {
+            display: grid;
+            grid-template-columns: 92px minmax(0, 1fr) 92px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .collage {
+            width: 92px;
+            height: 92px;
+            gap: 3px;
+            border-radius: 9px;
+        }
+
+        .controls-area {
+            gap: 12px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 14px;
+            line-height: 1.25;
+            white-space: nowrap;
+        }
+
+        .buttons {
+            gap: 13px;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-skip {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(234,224,208,0.16);
+            color: #EAE0D0;
+            border: 1px solid rgba(234,224,208,0.55);
+            flex: 0 0 36px;
+        }
+
+        .btn-skip svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .btn-play {
+            width: 46px;
+            height: 46px;
+            flex: 0 0 46px;
+        }
+
+        .btn-play svg {
+            width: 19px;
+            height: 19px;
+        }
+
+        .progress-section {
+            width: 100%;
+            gap: 7px;
+        }
+
+        .progress-track {
+            height: 7px;
+        }
+
+        .time-row {
+            font-size: 11px;
+        }
+
+        .vinyl {
+            width: 92px;
+            height: 92px;
+        }
+
+        .vinyl::after {
+            width: 28px;
+            height: 28px;
+        }
+
+        .playlist {
+            margin-top: 12px;
+            padding: 12px 15px;
+            border-radius: 14px;
+        }
+
+        .playlist li {
+            font-size: 14px;
+            padding: 11px 0;
+            min-height: 42px;
+        }
+
+        .action-row {
+            margin-top: 2px;
+            gap: 12px;
+        }
+
+        .btn-small {
+            padding: 13px 20px;
+            font-size: 14px;
+        }
+
+        /* Login screen: larger overall, especially on phones */
+        #login-overlay {
+            padding: 24px 14px;
+        }
+
+        .safe-title {
+            font-size: 46px;
+            margin-bottom: 20px;
+        }
+
+        .login-box {
+            width: min(92vw, 370px);
+            max-width: 370px;
+            padding: 32px 22px 28px;
+            border-radius: 28px;
+        }
+
+        .login-box h2 {
+            font-size: 20px;
+            margin-bottom: 22px;
+        }
+
+        .pin-display {
+            gap: 12px;
+            margin-bottom: 28px;
+        }
+
+        .pin-box {
+            width: 60px;
+            height: 66px;
+            border-radius: 14px;
+            font-size: 29px;
+        }
+
+        .keypad {
+            gap: 14px;
+            margin-bottom: 12px;
+        }
+
+        .key-btn {
+            width: 68px;
+            height: 68px;
+            font-size: 23px;
+        }
+
+        #error-msg {
+            font-size: 14px;
+            margin-top: 14px;
+        }
+
+        /* Keep the larger design comfortable on small phones */
+        @media (max-width: 380px) {
+            #main-page {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+
+            .slider-wrapper {
+                height: 420px;
+            }
+
+            .slide {
+                width: 275px;
+                height: 380px;
+            }
+
+            .landscape {
+                width: 292px !important;
+                height: 345px !important;
+            }
+
+            .slide-7 {
+                width: 288px !important;
+                height: 350px !important;
+            }
+
+            .slide.next {
+                transform: translateX(-132px) scale(0.70);
+            }
+
+            .slide.prev {
+                transform: translateX(132px) scale(0.70);
+            }
+
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 20px;
+            }
+
+            .top-section {
+                grid-template-columns: 76px minmax(0, 1fr) 76px;
+                gap: 8px;
+            }
+
+            .collage {
+                width: 76px;
+                height: 76px;
+            }
+
+            .vinyl {
+                width: 76px;
+                height: 76px;
+            }
+
+            .title {
+                font-size: 12px;
+            }
+
+            .buttons {
+                gap: 8px;
+            }
+
+            .btn-skip {
+                width: 32px;
+                height: 32px;
+                flex-basis: 32px;
+            }
+
+            .btn-skip svg {
+                width: 17px;
+                height: 17px;
+            }
+
+            .btn-play {
+                width: 42px;
+                height: 42px;
+                flex-basis: 42px;
+            }
+
+            .btn-play svg {
+                width: 17px;
+                height: 17px;
+            }
+
+            .time-box {
+                min-height: 96px;
+            }
+
+            .time-box span.num {
+                font-size: 23px;
+            }
+
+            .time-box span.label {
+                font-size: 11px;
+            }
+
+            .safe-title {
+                font-size: 40px;
+            }
+
+            .login-box {
+                width: 94vw;
+                padding: 28px 15px 24px;
+            }
+
+            .pin-box {
+                width: 54px;
+                height: 60px;
+            }
+
+            .keypad {
+                gap: 11px;
+            }
+
+            .key-btn {
+                width: 62px;
+                height: 62px;
+            }
+        }
+
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <div id="curtain-container">
+        <div class="curtain-panel curtain-left"></div>
+        <div class="curtain-panel curtain-right"></div>
+        <div id="countdown-overlay">3</div>
+    </div>
+    <div id="main-page" class="page">
+        <div class="torn-paper-note">❤️Agmal Memories f hayaty heya elly ma3aky</div>
+        <div class="slider-window">
+            <div class="slider-wrapper">
+                <img src="images/1.jpg" alt="صورة 1" class="slide landscape">
+                <img src="images/2.jpg" alt="صورة 2" class="slide">
+                <img src="images/3.jpg" alt="صورة 3" class="slide">
+                <img src="images/4.jpg" alt="صورة 4" class="slide">
+                <img src="images/5.jpg" alt="صورة 5" class="slide">
+                <img src="images/6.jpg" alt="صورة 6" class="slide landscape">
+                <img src="images/7.jpg" alt="صورة 7" class="slide slide-7">
+                <img src="images/8.jpg" alt="صورة 8" class="slide landscape">
+                <img src="images/9.jpg" alt="صورة 9" class="slide">
+                <img src="images/10.jpg" alt="صورة 10" class="slide">
+                <img src="images/11.jpg" alt="صورة 11" class="slide landscape">
+                <img src="images/12.jpg" alt="صورة 12" class="slide">
+                <img src="images/13.jpg" alt="صورة 13" class="slide landscape">
+                <img src="images/14.jpg" alt="صورة 14" class="slide">
+                <button class="nav-btn right-btn" onclick="moveSlide(1)">&#10095;</button>
+                <button class="nav-btn left-btn" onclick="moveSlide(-1)">&#10094;</button>
+            </div>
+        </div>
+        <div id="timer-section">
+            <h3 style="font-weight:900;font-size:22px;color:#EAE0D0;text-shadow:0 2px 8px rgba(0,0,0,0.4);">... Ana Bahebk gedan mn</h3>
+            <div class="timer-container">
+                <div class="time-box"><span class="num" id="days">0</span><span class="label">Days</span></div>
+                <div class="time-box"><span class="num" id="hours">0</span><span class="label">Hours</span></div>
+                <div class="time-box"><span class="num" id="minutes">0</span><span class="label">Minutes</span></div>
+                <div class="time-box"><span class="num" id="seconds">0</span><span class="label">Seconds</span></div>
+            </div>
+        </div>
+        <div id="music-section">
+            <div class="player-card">
+                <div class="top-section">
+                    <div class="collage">
+                        <img src="images/couple.jpg" alt="">
+                        <img src="images/p1.jpg" alt="">
+                        <img src="images/p2.jpg" alt="">
+                        <img src="images/p3.jpg" alt="">
+                    </div>
+                    <div class="controls-area">
+                        <div class="title">Playlist for my lover!</div>
+                        <div class="buttons">
+                            <button class="btn btn-skip" onclick="prevTrack()" title="السابق">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6.5C21 5.7 20.2 5.2 19.5 5.6L12.5 9.6C11.8 10 11.8 11 12.5 11.4L19.5 15.4C20.2 15.8 21 15.3 21 14.5V6.5Z"/><path d="M11.5 6.5C11.5 5.7 10.7 5.2 10 5.6L3 9.6C2.3 10 2.3 11 3 11.4L10 15.4C10.7 15.8 11.5 15.3 11.5 14.5V6.5Z"/></svg>
+                            </button>
+                            <button class="btn btn-play" id="play-btn" onclick="togglePlay()" title="تشغيل / إيقاف">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/></svg>
+                            </button>
+                            <button class="btn btn-skip" onclick="nextTrack()" title="التالي">
+                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6.5C3 5.7 3.8 5.2 4.5 5.6L11.5 9.6C12.2 10 12.2 11 11.5 11.4L4.5 15.4C3.8 15.8 3 15.3 3 14.5V6.5Z"/><path d="M12.5 6.5C12.5 5.7 13.3 5.2 14 5.6L21 9.6C21.7 10 21.7 11 21 11.4L14 15.4C13.3 15.8 12.5 15.3 12.5 14.5V6.5Z"/></svg>
+                            </button>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-track">
+                                <input type="range" id="song-progress" class="song-progress-new" value="0" max="100" step="0.1" oninput="seekSong(this.value)">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div class="time-row">
+                                <span id="current-time">0:00</span>
+                                <span id="total-duration">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="vinyl" id="vinyl-disk"></div>
+                </div>
+                <ul class="playlist">
+                    <li class="active-track" id="track-0" onclick="playSelectedTrack(0)"><span>1 | Mayet 3leky 😉</span><span>06:09</span></li>
+                    <li id="track-1" onclick="playSelectedTrack(1)"><span>2 | Kelma 💌</span><span>04:04</span></li>
+                    <li id="track-2" onclick="playSelectedTrack(2)"><span>3 | Mabnsash ♾️ ❤️</span><span>20:01</span></li>
+                </ul>
+            </div>
+            <audio id="audio-player"></audio>
+        </div>
+        <div class="action-row">
+            <button class="btn-small" onclick="startMaymayShow()">🎈 Maymay's Day</button>
+            <button class="btn-small" onclick="showPage('msg-page')">💌 Message for Halawyat</button>
+        </div>
+    </div>
+    <div id="birthday-page" class="page" style="justify-content: center;">
+        <button class="back-btn" onclick="showPage('main-page')" style="position: absolute; top: 20px; right: 20px;">← Back</button>
+        <div class="circle-stage" id="circle-stage">
+            <div id="spotlight-box">
+                <img id="spotlight-img" class="spotlight-sticker-img" src="" alt="Spotlight">
+                <span id="spotlight-title" class="spotlight-sticker-text"></span>
+            </div>
+            <div class="orbit-ring" id="orbit-ring">
+                <div class="orbit-img-wrapper pos-1" id="orb-1">
+                    <div class="sticker-item">
+                        <img src="images/Halawyat.jpg" alt="Halawyat">
+                        <span class="sticker-text">Halawyat 😍</span>
+                    </div>
+                </div>
+                <div class="orbit-img-wrapper pos-2" id="orb-2">
+                    <div class="sticker-item">
+                        <img src="images/Mrs Mayaa.jpg" alt="Mrs Mayaa">
+                        <span class="sticker-text">Mrs Mayaa 🤓</span>
+                    </div>
+                </div>
+                <div class="orbit-img-wrapper pos-3" id="orb-3">
+                    <div class="sticker-item">
+                        <img src="images/Halabo2a.jpg" alt="Halabo2a">
+                        <span class="sticker-text">Halabo2a 😜🤙</span>
+                    </div>
+                </div>
+                <div class="orbit-img-wrapper pos-4" id="orb-4">
+                    <div class="sticker-item">
+                        <img src="images/Halawa.jpg" alt="Halawa">
+                        <span class="sticker-text">Halawaa 🤩</span>
+                    </div>
+                </div>
+                <div class="orbit-img-wrapper pos-5" id="orb-5">
+                    <div class="sticker-item">
+                        <img src="images/My veiw.jpg" alt="My veiw">
+                        <span class="sticker-text">My veiw ❤️😘</span>
+                    </div>
+                </div>
+            </div>
+            <div class="center-gift-box" id="center-gift-box" onclick="openGiftBox()">
+                <img src="images/gift_box.png" alt="Gift Box" class="gift-img">
+                <span class="gift-hint">Akher wahda..Gahza!!🫣</span>
+            </div>
+        </div>
+        <div class="torn-paper-box" id="torn-paper-box">
+            <span id="typewriter-text"></span>
+        </div>
+        <button id="continue-btn" class="btn-small" style="display: none; margin-top: 15px; font-size: 16px; padding: 10px 25px;" onclick="showPage('birthday-details-page')">Click on beida 😂</button>
+    </div>
+    <div id="birthday-details-page" class="page">
+        <button class="back-btn" onclick="showPage('birthday-page')">← Back</button>
+        <div class="sub-card">
+            <h3>Maymay's Day 🎈</h3>
+            <img src="images/maya-calendar.jpg" alt="6 September" style="width: 100%; border-radius: 10px; border: 2px solid #7D1B23; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <p>Kol sana wenty tayba ya habebt alby w inshallah tefdly b kheir daymn w tewsaly l kol elly nefsk feeh w tkony angah ensana f el donia</p>
+            <p>W Khaleky daymn fakra eny akbar mahzouz f el donia 3ashan enty ma3aya ya 7alabo2a</p>
+            <p>Awel 3eid melad yarab tekony etbasty w tefdly fakrah daymn w inshallah hanfdl nehtfl 3la tol</p>
+            <p>❤️Bamout feky ya halawyat❤️</p>
+        </div>
+    </div>
+    <div id="msg-page" class="page">
+        <button class="back-btn" onclick="showPage('main-page')">← Back</button>
+        <div class="sub-card">
+            <h3>For You ❤️</h3>
+            <p>من اول يوم شوفتك فيه و انا مش مستوعب قد ايه ممكن بني ادمه تكون بالجمال ده عشان عمري ما شوفت ولا هشوف حاجه اجمل منك زي ما اكون كنت بدور عليكي</p>
+            <p>و بعد ما عرفتك اكتر اتعلقت بيكي و مبقاش ينفع يعدي يوم من غير ما اكلمك و كنت بستنى اشوفك و كنت كل مره اشوفك فيها بقع على وشي اكتر لحد ما اكتشفت انتي ايه بالنسبالي و مبقتش اعرف اعيش من غيرك</p>
+            <p>انتي احلى حاجه حصلتلي في حياتي و ان شاء الله نفضل على طول و اقدر اخليكي مبسوطه و بتضحكي ديما</p>
+            <p>انا بحبك جداً جداً جداً يا مايا❤️</p>
+        </div>
+    </div>
+    <div id="welcome-screen">
+        <img src="images/childhood_couple.jpg" alt="Our Childhood" style="width: 250px; height: 250px; border-radius: 50%; border: 4px solid #EAE0D0; box-shadow: 0 10px 20px rgba(0,0,0,0.5); margin-bottom: 25px; object-fit: cover;">
+        <p style="color: #EAE0D0; font-size: 22px; margin-bottom: 35px; font-family: 'Cairo', sans-serif; font-weight: bold;">? Would you like to open your gift</p>
+        <div style="display: flex; gap: 20px; justify-content: center; position: relative;">
+            <button onclick="goToMain()" style="padding: 12px 35px; border-radius: 25px; border: none; background: #EAE0D0; color: #4A121A; font-size: 18px; font-weight: bold; cursor: pointer;">Yes</button>
+            <button id="no-btn" onclick="toggleNoContent()" style="padding: 12px 35px; border-radius: 25px; border: none; background: #EAE0D0; color: #4A121A; font-size: 18px; font-weight: bold; cursor: pointer;">No</button>
+        </div>
+        <div id="inline-no-content" style="display: none; margin-top: 20px; text-align: center;">
+            <img src="images/no_photo.jpg" alt="No Photo" style="width: 150px; height: auto; background: transparent; border: none; box-shadow: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));">
+        </div>
+    </div>
+    <div id="login-overlay">
+        <h1 class="safe-title">My Dearest<br>Mayaa</h1>
+        <div class="login-box">
+            <h2>? Et2ablna Emtaa</h2>
+            <div class="pin-display">
+                <div class="pin-box" id="box-0"></div>
+                <div class="pin-box" id="box-1"></div>
+                <div class="pin-box" id="box-2"></div>
+                <div class="pin-box" id="box-3"></div>
+            </div>
+            <div class="keypad">
+                <button class="key-btn" onclick="pressKey('1')">1</button>
+                <button class="key-btn" onclick="pressKey('2')">2</button>
+                <button class="key-btn" onclick="pressKey('3')">3</button>
+                <button class="key-btn" onclick="pressKey('4')">4</button>
+                <button class="key-btn" onclick="pressKey('5')">5</button>
+                <button class="key-btn" onclick="pressKey('6')">6</button>
+                <button class="key-btn" onclick="pressKey('7')">7</button>
+                <button class="key-btn" onclick="pressKey('8')">8</button>
+                <button class="key-btn" onclick="pressKey('9')">9</button>
+                <button class="key-btn action-key" onclick="clearKey()">C</button>
+                <button class="key-btn" onclick="pressKey('0')">0</button>
+                <button class="key-btn action-key" onclick="checkPassword()">OK</button>
+            </div>
+            <p id="error-msg">Ghalat ... Rakezy ya halawyat!</p>
+        </div>
+    </div>
+    <script>
+        const playlist = [
+            { src: "images/song.mp3", duration: 546 },
+            { src: "images/kelma.mp3", duration: 244 },
+            { src: "images/mabnsash.mp3", duration: 80 }
+        ];
+        let currentTrackIndex = 0;
+        const audio = document.getElementById("audio-player");
+        const playBtn = document.getElementById("play-btn");
+        const songProgress = document.getElementById("song-progress");
+        const progressFill = document.getElementById("progress-fill");
+        const currentTimeEl = document.getElementById("current-time");
+        const totalDurationEl = document.getElementById("total-duration");
+        let transitionTimeout = null;
+
+        function formatTime(seconds) {
+            if (isNaN(seconds) || seconds < 0) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        function loadTrack(index) {
+            currentTrackIndex = index;
+            audio.pause();
+            audio.currentTime = 0;
+            audio.src = playlist[index].src;
+            audio.load();
+            const fallbackDuration = playlist[index].duration;
+            totalDurationEl.innerText = formatTime(fallbackDuration);
+            document.querySelectorAll(".playlist li").forEach((item, i) => {
+                item.classList.toggle("active-track", i === index);
+            });
+            songProgress.value = 0;
+            if (progressFill) progressFill.style.width = "0%";
+            currentTimeEl.innerText = "0:00";
+        }
+
+        function togglePlay() {
+            const vinyl = document.getElementById("vinyl-disk");
+            const playSvg = playBtn.querySelector("svg");
+            if (audio.paused) {
+                if (!audio.src || audio.src === window.location.href) {
+                    loadTrack(currentTrackIndex);
+                }
+                audio.play();
+                playSvg.innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                if (vinyl) vinyl.classList.add("playing");
+            } else {
+                audio.pause();
+                playSvg.innerHTML = '<path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/>';
+                if (vinyl) vinyl.classList.remove("playing");
+            }
+        }
+
+        function playSelectedTrack(index) {
+            if (transitionTimeout) clearTimeout(transitionTimeout);
+            const vinyl = document.getElementById("vinyl-disk");
+            if (vinyl) vinyl.classList.remove("playing");
+            audio.pause();
+            audio.currentTime = 0;
+            playBtn.querySelector("svg").innerHTML = '<path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/>';
+            transitionTimeout = setTimeout(() => {
+                loadTrack(index);
+                audio.play().then(() => {
+                    playBtn.querySelector("svg").innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+                    if (vinyl) vinyl.classList.add("playing");
+                }).catch(e => console.log("Play failed:", e));
+            }, 300);
+        }
+
+        function nextTrack() {
+            let nextIndex = (currentTrackIndex + 1) % playlist.length;
+            playSelectedTrack(nextIndex);
+        }
+
+        function prevTrack() {
+            let prevIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            playSelectedTrack(prevIndex);
+        }
+
+        audio.addEventListener("timeupdate", () => {
+            const duration = audio.duration || playlist[currentTrackIndex].duration;
+            const current = audio.currentTime;
+            if (duration && isFinite(duration)) {
+                const percent = (current / duration) * 100;
+                songProgress.value = percent;
+                if (progressFill) progressFill.style.width = percent + "%";
+            }
+            currentTimeEl.innerText = formatTime(current);
+            const remaining = duration - current;
+            totalDurationEl.innerText = "-" + formatTime(remaining > 0 ? remaining : 0);
+        });
+
+        audio.addEventListener("ended", () => { nextTrack(); });
+
+        audio.addEventListener("loadedmetadata", () => {
+            if (audio.duration && isFinite(audio.duration)) {
+                playlist[currentTrackIndex].duration = audio.duration;
+                const remaining = audio.duration - audio.currentTime;
+                totalDurationEl.innerText = "-" + formatTime(remaining);
+            }
+        });
+
+        function seekSong(val) {
+            const duration = audio.duration || playlist[currentTrackIndex].duration;
+            if (duration && isFinite(duration)) {
+                audio.currentTime = (val / 100) * duration;
+            }
+        }
+
+        loadTrack(0);
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => {
+                p.style.display = 'none';
+                p.querySelectorAll('.orbit-ring, .sticker-item').forEach(el => {
+                    el.style.animationPlayState = 'paused';
+                });
+            });
+            const active = document.getElementById(pageId);
+            active.style.display = 'flex';
+            if (pageId === 'birthday-page') {
+                active.querySelectorAll('.orbit-ring, .sticker-item').forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            }
+            window.scrollTo(0, 0);
+        }
+
+        const photosData = [
+            { src: 'images/Halawyat.jpg', title: 'Halawyat 😍' },
+            { src: 'images/Mrs Mayaa.jpg', title: 'Mrs Mayaa 🤓' },
+            { src: 'images/Halabo2a.jpg', title: 'Halabo2a 😜🤙' },
+            { src: 'images/Halawa.jpg', title: 'Halawaa 🤩' },
+            { src: 'images/My veiw.jpg', title: 'My veiw ❤️😘' }
+        ];
+
+        let animationTimeouts = [];
+
+        function clearShowTimeouts() {
+            animationTimeouts.forEach(t => clearTimeout(t));
+            animationTimeouts = [];
+        }
+
+        function startMaymayShow() {
+            showPage('birthday-page');
+            clearShowTimeouts();
+            const orbitRing = document.getElementById('orbit-ring');
+            const spotBox = document.getElementById('spotlight-box');
+            const curtain = document.getElementById('curtain-container');
+            const countdownEl = document.getElementById('countdown-overlay');
+            const giftBox = document.getElementById('center-gift-box');
+            const circleStage = document.getElementById('circle-stage');
+            const tornPaperBox = document.getElementById('torn-paper-box');
+            const typeText = document.getElementById('typewriter-text');
+            const continueBtn = document.getElementById('continue-btn');
+
+            circleStage.classList.remove('expanded');
+            tornPaperBox.style.display = 'none';
+            typeText.innerHTML = '';
+            continueBtn.style.display = 'none';
+            giftBox.style.display = 'flex';
+            giftBox.style.opacity = '';
+            giftBox.style.pointerEvents = '';
+
+            const spotImg = document.getElementById('spotlight-img');
+            spotImg.style.borderRadius = '';
+            spotImg.style.boxShadow = '';
+            spotImg.style.backgroundColor = '';
+            spotImg.style.objectFit = '';
+            spotImg.style.filter = '';
+            spotImg.classList.remove('wiggle-active');
+            spotImg.style.cursor = 'default';
+            spotImg.onclick = null;
+
+            const spotTitle = document.getElementById('spotlight-title');
+            spotTitle.style.backgroundColor = '';
+            spotTitle.style.boxShadow = '';
+            spotTitle.style.fontSize = '';
+            spotTitle.style.padding = '';
+            spotTitle.style.color = '';
+            spotTitle.style.textShadow = '';
+
+            orbitRing.classList.remove('blurred');
+            spotBox.classList.remove('active');
+            giftBox.classList.remove('revealed');
+
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`orb-${i}`).classList.remove('revealed');
+            }
+
+            curtain.style.display = 'block';
+            curtain.classList.remove('curtain-open');
+            countdownEl.style.display = 'block';
+            countdownEl.innerText = '3';
+
+            animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '2'; }, 1000));
+            animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '1'; }, 2000));
+            animationTimeouts.push(setTimeout(() => {
+                countdownEl.style.display = 'none';
+                curtain.classList.add('curtain-open');
+            }, 3000));
+            animationTimeouts.push(setTimeout(() => {
+                curtain.style.display = 'none';
+            }, 4800));
+
+            function presentPhoto(index, startTime) {
+                animationTimeouts.push(setTimeout(() => {
+                    spotImg.src = photosData[index].src;
+                    spotTitle.innerText = photosData[index].title;
+                    spotTitle.style.backgroundColor = '#EAE0D0';
+                    spotTitle.style.color = '#4A121A';
+                    orbitRing.classList.add('blurred');
+                    spotBox.classList.add('active');
+                }, startTime));
+                animationTimeouts.push(setTimeout(() => {
+                    spotBox.classList.remove('active');
+                    orbitRing.classList.remove('blurred');
+                    document.getElementById(`orb-${index + 1}`).classList.add('revealed');
+                }, startTime + 3000));
+            }
+
+            presentPhoto(0, 5000);
+            presentPhoto(1, 8800);
+            presentPhoto(2, 12600);
+            presentPhoto(3, 16400);
+            presentPhoto(4, 20200);
+
+            animationTimeouts.push(setTimeout(() => {
+                giftBox.classList.add('revealed');
+            }, 24000));
+        }
+
+        function openGiftBox() {
+            const giftBox = document.getElementById('center-gift-box');
+            giftBox.classList.remove('revealed');
+            setTimeout(() => { giftBox.style.display = 'none'; }, 600);
+            const circleStage = document.getElementById('circle-stage');
+            circleStage.classList.add('expanded');
+            const spotBox = document.getElementById('spotlight-box');
+            const spotImg = document.getElementById('spotlight-img');
+            spotImg.src = 'images/child.png';
+            spotImg.style.borderRadius = '0';
+            spotImg.style.boxShadow = 'none';
+            spotImg.style.backgroundColor = 'transparent';
+            spotImg.style.objectFit = 'contain';
+            spotImg.style.filter = 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))';
+            spotImg.classList.add('wiggle-active');
+            spotImg.style.cursor = 'pointer';
+            spotImg.onclick = function() { showPage('birthday-details-page'); };
+            const spotTitle = document.getElementById('spotlight-title');
+            spotTitle.innerText = 'el beida 😂';
+            spotTitle.style.fontSize = '14px';
+            spotTitle.style.padding = '3px 14px';
+            spotTitle.style.backgroundColor = '#EAE0D0';
+            spotTitle.style.color = '#4A121A';
+            spotTitle.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
+            spotTitle.style.textShadow = 'none';
+            setTimeout(() => { spotBox.classList.add('active'); }, 500);
+            const tornPaperBox = document.getElementById('torn-paper-box');
+            const textContainer = document.getElementById('typewriter-text');
+            tornPaperBox.style.display = 'block';
+            textContainer.innerHTML = '';
+            const text1 = "Msh 3aref a2ol l meen f dol kol sana wenty tayba";
+            const text2 = "Bs elly a3rfo eny baheb kol dol gedan 🥰";
+            let i = 0, j = 0;
+            function typeLine1() {
+                if (i < text1.length) {
+                    textContainer.innerHTML += text1.charAt(i);
+                    i++;
+                    setTimeout(typeLine1, 120);
+                } else {
+                    textContainer.innerHTML += '<br>';
+                    setTimeout(typeLine2, 500);
+                }
+            }
+            function typeLine2() {
+                if (j < text2.length) {
+                    textContainer.innerHTML += text2.charAt(j);
+                    j++;
+                    setTimeout(typeLine2, 120);
+                } else {
+                    setTimeout(() => {
+                        document.getElementById('continue-btn').style.display = 'flex';
+                    }, 500);
+                }
+            }
+            setTimeout(typeLine1, 1000);
+        }
+
+        function toggleNoContent() {
+            const content = document.getElementById("inline-no-content");
+            content.style.display = content.style.display === "block" ? "none" : "block";
+        }
+
+        let enteredPin = "";
+        function pressKey(num) {
+            if (enteredPin.length < 4) {
+                enteredPin += num;
+                updatePinDisplay();
+            }
+            document.getElementById("error-msg").style.display = "none";
+        }
+        function clearKey() {
+            enteredPin = "";
+            updatePinDisplay();
+        }
+        function updatePinDisplay() {
+            for (let i = 0; i < 4; i++) {
+                let box = document.getElementById("box-" + i);
+                box.innerText = enteredPin[i] ? "*" : "";
+            }
+        }
+        function checkPassword() {
+            if (enteredPin === "2001") {
+                document.getElementById("login-overlay").style.display = "none";
+                document.getElementById("welcome-screen").style.display = "flex";
+            } else {
+                document.getElementById("error-msg").style.display = "block";
+                clearKey();
+            }
+        }
+        function goToMain() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("main-page").style.display = "flex";
+            document.body.style.overflow = "auto";
+            updateSlider();
+            startAutoSlide();
+        }
+
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll(".slide");
+        const totalSlides = slides.length;
+        let slideInterval;
+
+        function updateSlider() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove("active", "prev", "next");
+                if (index === currentSlideIndex) {
+                    slide.classList.add("active");
+                } else if (index === (currentSlideIndex + 1) % totalSlides) {
+                    slide.classList.add("next");
+                } else if (index === (currentSlideIndex - 1 + totalSlides) % totalSlides) {
+                    slide.classList.add("prev");
+                }
+            });
+        }
+        function moveSlide(direction) {
+            currentSlideIndex = (currentSlideIndex + direction + totalSlides) % totalSlides;
+            updateSlider();
+            resetAutoSlide();
+        }
+        function startAutoSlide() {
+            slideInterval = setInterval(() => { moveSlide(1); }, 5000);
+        }
+        function resetAutoSlide() {
+            clearInterval(slideInterval);
+            startAutoSlide();
+        }
+
+        const startDate = new Date("2026-04-04T00:00:00").getTime();
+        function updateTimer() {
+            const now = new Date().getTime();
+            const difference = now - startDate;
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+                document.getElementById("days").innerText = days;
+                document.getElementById("hours").innerText = hours;
+                document.getElementById("minutes").innerText = minutes;
+                document.getElementById("seconds").innerText = seconds;
+            }
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
+</body>
+</html>

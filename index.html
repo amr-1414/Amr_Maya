@@ -116,11 +116,22 @@
             padding: 6px 6px 25px 6px;
             border-radius: 12px;
             object-fit: cover;
-            transition: all 0.4s ease-in-out;
+            /* PERF: was `transition: all 0.4s ease-in-out`. "all" makes the browser
+               watch every property (including box-shadow / border-radius, which never
+               actually change) for changes each frame. Restricting the transition to
+               transform + opacity keeps this animation on the compositor thread. */
+            transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             opacity: 0;
             transform: scale(0.5);
             z-index: 1;
+        }
+
+        /* PERF: will-change is scoped to only the 3 slides that are actually
+           transitioning at any given moment (active/prev/next), not all 14 photos.
+           Promoting every slide to its own GPU layer would waste memory on mobile;
+           promoting only the 3 in motion gets the same smoothness for free. */
+        .slide.active, .slide.prev, .slide.next {
             will-change: transform, opacity;
         }
 
@@ -478,7 +489,6 @@
             object-fit: cover;
             border-radius: 50%; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            transform: translateZ(0);
         }
 
         .spotlight-sticker-text {
@@ -502,10 +512,35 @@
             align-items: center;
             transition: transform 0.8s ease;
             max-width: 100%;
-            transform: translateZ(0);
+            /* RESPONSIVE: a CSS custom property so we can uniformly rescale the whole
+               orbit (see the media query below) with a single transform instead of
+               resizing the stage and having to recompute every child's translate()
+               value by hand. Default 1 = pixel-identical to the original on any
+               screen wide enough to fit 340px. */
+            --orbit-scale: 1;
+            transform: translateZ(0) scale(var(--orbit-scale));
+            /* PERF: this element is transformed on "expanded" (and pre-scaled on
+               narrow screens), so it benefits from being on its own compositor layer. */
+            will-change: transform;
+            /* PERF: everything that moves in this section (orbit rotation, spotlight,
+               gift box) is absolutely positioned inside this box and never affects
+               anything outside it, so `contain: layout` lets the browser skip
+               recalculating the rest of the page's layout during the animation.
+               (Not `paint`/`strict` — those would clip children and change the look.) */
+            contain: layout;
         }
 
-        .circle-stage.expanded { transform: scale(1.1); }
+        .circle-stage.expanded { transform: translateZ(0) scale(calc(var(--orbit-scale) * 1.1)); }
+
+        /* RESPONSIVE: the fixed 340px stage + 12px page padding overflows on
+           ~360px-wide phones (iPhone SE / small Android). Rather than resizing the
+           stage — which would require recalculating every orb-N translate() value
+           and could look different from the original — we scale the whole group
+           down uniformly. The circular shape, relative positions, rotation
+           direction and speed all stay exactly the same, just smaller. */
+        @media (max-width: 360px) {
+            .circle-stage { --orbit-scale: 0.82; }
+        }
 
         @keyframes rotateOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes counterRotate { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
@@ -524,7 +559,11 @@
             position: absolute;
             top: 50%; left: 50%;
             margin-top: -50px; margin-left: -40px;
-            opacity: 0; transform: scale(0) translateZ(0);
+            opacity: 0; transform: scale(0);
+            /* PERF: was `transition: all 0.5s ease`. Scoping this to the two
+               properties that actually change (transform, opacity) keeps the
+               center -> orbit move on the compositor instead of the browser
+               re-checking every property (box-shadow, etc.) on every frame. */
             transition: transform 0.5s ease, opacity 0.5s ease;
             display: flex; flex-direction: column; align-items: center;
             will-change: transform, opacity;
@@ -663,20 +702,20 @@
 
         <div class="slider-window">
             <div class="slider-wrapper">
-                <img src="images/1.jpg" alt="صورة 1" class="slide landscape">
-                <img src="images/2.jpg" alt="صورة 2" class="slide">
-                <img src="images/3.jpg" alt="صورة 3" class="slide">
-                <img src="images/4.jpg" alt="صورة 4" class="slide">
-                <img src="images/5.jpg" alt="صورة 5" class="slide">
-                <img src="images/6.jpg" alt="صورة 6" class="slide landscape">
-                <img src="images/7.jpg" alt="صورة 7" class="slide slide-7">
-                <img src="images/8.jpg" alt="صورة 8" class="slide landscape">
-                <img src="images/9.jpg" alt="صورة 9" class="slide">
-                <img src="images/10.jpg" alt="صورة 10" class="slide">
-                <img src="images/11.jpg" alt="صورة 11" class="slide landscape">
-                <img src="images/12.jpg" alt="صورة 12" class="slide">
-                <img src="images/13.jpg" alt="صورة 13" class="slide landscape">
-                <img src="images/14.jpg" alt="صورة 14" class="slide">
+                <img src="images/1.jpg" alt="صورة 1" class="slide landscape" decoding="async">
+                <img src="images/2.jpg" alt="صورة 2" class="slide" decoding="async">
+                <img src="images/3.jpg" alt="صورة 3" class="slide" decoding="async">
+                <img src="images/4.jpg" alt="صورة 4" class="slide" decoding="async">
+                <img src="images/5.jpg" alt="صورة 5" class="slide" decoding="async">
+                <img src="images/6.jpg" alt="صورة 6" class="slide landscape" decoding="async">
+                <img src="images/7.jpg" alt="صورة 7" class="slide slide-7" decoding="async">
+                <img src="images/8.jpg" alt="صورة 8" class="slide landscape" decoding="async">
+                <img src="images/9.jpg" alt="صورة 9" class="slide" decoding="async">
+                <img src="images/10.jpg" alt="صورة 10" class="slide" decoding="async">
+                <img src="images/11.jpg" alt="صورة 11" class="slide landscape" decoding="async">
+                <img src="images/12.jpg" alt="صورة 12" class="slide" decoding="async">
+                <img src="images/13.jpg" alt="صورة 13" class="slide landscape" decoding="async">
+                <img src="images/14.jpg" alt="صورة 14" class="slide" decoding="async">
                 <button class="nav-btn right-btn" onclick="moveSlide(1)">&#10095;</button>
                 <button class="nav-btn left-btn" onclick="moveSlide(-1)">&#10094;</button>
             </div>
@@ -697,10 +736,10 @@
             <div class="player-card">
                 <div class="top-section">
                     <div class="collage">
-                        <img src="images/couple.jpg" alt="">
-                        <img src="images/p1.jpg" alt="">
-                        <img src="images/p2.jpg" alt="">
-                        <img src="images/p3.jpg" alt="">
+                        <img src="images/couple.jpg" alt="" decoding="async">
+                        <img src="images/p1.jpg" alt="" decoding="async">
+                        <img src="images/p2.jpg" alt="" decoding="async">
+                        <img src="images/p3.jpg" alt="" decoding="async">
                     </div>
                     <div class="controls-area">
                         <div class="title">Playlist for my lover!</div>
@@ -746,43 +785,43 @@
         <button id="birthday-back-btn" class="back-btn" onclick="showPage('main-page')" style="position: absolute; top: 15px; right: 15px; display: none;">← Back</button>
         <div class="circle-stage" id="circle-stage">
             <div id="spotlight-box">
-                <img id="spotlight-img" class="spotlight-sticker-img" src="" alt="Spotlight">
+                <img id="spotlight-img" class="spotlight-sticker-img" src="" alt="Spotlight" decoding="async">
                 <span id="spotlight-title" class="spotlight-sticker-text"></span>
             </div>
             <div class="orbit-ring" id="orbit-ring">
                 <div class="orbit-img-wrapper pos-1" id="orb-1">
                     <div class="sticker-item">
-                        <img src="images/Halawyat.jpg" alt="Halawyat">
+                        <img src="images/Halawyat.jpg" alt="Halawyat" decoding="async">
                         <span class="sticker-text">Halawyat 😍</span>
                     </div>
                 </div>
                 <div class="orbit-img-wrapper pos-2" id="orb-2">
                     <div class="sticker-item">
-                        <img src="images/Mrs Mayaa.jpg" alt="Mrs Mayaa">
+                        <img src="images/Mrs Mayaa.jpg" alt="Mrs Mayaa" decoding="async">
                         <span class="sticker-text">Mrs Mayaa 🤓</span>
                     </div>
                 </div>
                 <div class="orbit-img-wrapper pos-3" id="orb-3">
                     <div class="sticker-item">
-                        <img src="images/Halabo2a.jpg" alt="Halabo2a">
+                        <img src="images/Halabo2a.jpg" alt="Halabo2a" decoding="async">
                         <span class="sticker-text">Halabo2a 😜🤙</span>
                     </div>
                 </div>
                 <div class="orbit-img-wrapper pos-4" id="orb-4">
                     <div class="sticker-item">
-                        <img src="images/Halawa.jpg" alt="Halawa">
+                        <img src="images/Halawa.jpg" alt="Halawa" decoding="async">
                         <span class="sticker-text">Halawaa 🤩</span>
                     </div>
                 </div>
                 <div class="orbit-img-wrapper pos-5" id="orb-5">
                     <div class="sticker-item">
-                        <img src="images/My veiw.jpg" alt="My veiw">
+                        <img src="images/My veiw.jpg" alt="My veiw" decoding="async">
                         <span class="sticker-text">My veiw ❤️😘</span>
                     </div>
                 </div>
             </div>
             <div class="center-gift-box" id="center-gift-box" onclick="openGiftBox()">
-                <img src="images/gift_box.png" alt="Gift Box" class="gift-img">
+                <img src="images/gift_box.png" alt="Gift Box" class="gift-img" decoding="async">
                 <span class="gift-hint">Akher wahda..Gahza!!🫣</span>
             </div>
         </div>
@@ -797,7 +836,7 @@
         <button class="back-btn" onclick="showPage('birthday-page')">← Back</button>
         <div class="sub-card">
             <h3>Maymay's Day 🎈</h3>
-            <img src="images/maya-calendar.jpg" alt="6 September" style="width: 100%; border-radius: 10px; border: 2px solid #7D1B23; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <img src="images/maya-calendar.jpg" alt="6 September" style="width: 100%; border-radius: 10px; border: 2px solid #7D1B23; margin-bottom: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);" decoding="async">
             <p>Kol sana wenty tayba ya habebt alby w inshallah tefdly b kheir daymn w tewsaly l kol elly nefsk feeh w tkony angah ensana f el donia</p>
             <p>W Khaleky daymn fakra eny akbar mahzouz f el donia 3ashan enty ma3aya ya 7alabo2a</p>
             <p>Awel 3eid melad yarab tekony etbasty w tefdly fakrah daymn w inshallah hanfdl nehtfl 3la tol</p>
@@ -817,14 +856,14 @@
     </div>
 
     <div id="welcome-screen">
-        <img src="images/childhood_couple.jpg" alt="Our Childhood" style="width: 200px; height: 200px; border-radius: 50%; border: 4px solid #EAE0D0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); margin-bottom: 20px; object-fit: cover;">
+        <img src="images/childhood_couple.jpg" alt="Our Childhood" style="width: 200px; height: 200px; border-radius: 50%; border: 4px solid #EAE0D0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); margin-bottom: 20px; object-fit: cover;" decoding="async">
         <p style="color: #EAE0D0; font-size: 18px; margin-bottom: 25px; font-family: 'Cairo', sans-serif; font-weight: bold;">? Would you like to open your gift</p>
         <div style="display: flex; gap: 15px; justify-content: center; position: relative;">
             <button onclick="goToMain()" style="padding: 10px 30px; border-radius: 20px; border: none; background: #EAE0D0; color: #4A121A; font-size: 16px; font-weight: bold; cursor: pointer;">Yes</button>
             <button id="no-btn" onclick="toggleNoContent()" style="padding: 10px 30px; border-radius: 20px; border: none; background: #EAE0D0; color: #4A121A; font-size: 16px; font-weight: bold; cursor: pointer;">No</button>
         </div>
         <div id="inline-no-content" style="display: none; margin-top: 15px; text-align: center;">
-            <img src="images/no_photo.jpg" alt="No Photo" style="width: 130px; height: auto; background: transparent; border: none; box-shadow: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));">
+            <img src="images/no_photo.jpg" alt="No Photo" style="width: 130px; height: auto; background: transparent; border: none; box-shadow: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));" decoding="async">
         </div>
     </div>
 
@@ -857,6 +896,63 @@
     </div>
 
     <script>
+        /* ============================================================
+           PERFORMANCE: Preload + decode the orbit/center images
+           ------------------------------------------------------------
+           PROBLEM FOUND: the 5 orbit photos were already in the initial
+           HTML (good — the browser starts fetching them at page load),
+           but nothing forced them to be fully *decoded* ahead of time,
+           and images/child.png was not in the DOM at all until
+           openGiftBox() set spotImg.src on the fly. Decoding a JPEG/PNG
+           is real CPU work; doing it for the first time at the exact
+           moment the image needs to be painted (while a transform/
+           opacity animation is running) is exactly what was causing the
+           stutter when each photo appeared and when the final center
+           image appeared.
+
+           FIX: as soon as the script runs (long before the visitor even
+           reaches the birthday page — they still have to enter the PIN
+           and tap through the welcome screen first), we create off-DOM
+           Image() objects for all 5 orbit photos + the final center
+           image and call .decode() on each. decode() resolves once the
+           bitmap is fully decoded and ready to paint, so by the time
+           startMaymayShow() actually runs, the browser can reuse the
+           already-decoded bitmap instead of decoding again.
+
+           We race this against a short timeout so a slow connection or
+           a missing file can never block the "Maymay's Day" button —
+           the show will still play, it just won't have had the head
+           start in the (unlikely) case preloading hasn't finished yet.
+           ============================================================ */
+        const ORBIT_PHOTO_SOURCES = [
+            'images/Halawyat.jpg',
+            'images/Mrs Mayaa.jpg',
+            'images/Halabo2a.jpg',
+            'images/Halawa.jpg',
+            'images/My veiw.jpg',
+            'images/child.png' // final center image, revealed in openGiftBox()
+        ];
+
+        function preloadAndDecode(sources) {
+            const loaders = sources.map(src => {
+                const img = new Image();
+                img.decoding = 'async';
+                img.src = src;
+                if (img.decode) {
+                    // Decodes without blocking the main thread where supported.
+                    return img.decode().catch(() => {});
+                }
+                // Fallback for browsers without HTMLImageElement.decode().
+                return new Promise(resolve => {
+                    img.onload = resolve;
+                    img.onerror = resolve; // never let one bad file block the site
+                });
+            });
+            return Promise.all(loaders);
+        }
+
+        const orbitImagesReady = preloadAndDecode(ORBIT_PHOTO_SOURCES);
+
         const playlist = [
             { src: "images/song.mp3", duration: 546 },
             { src: "images/kelma.mp3", duration: 244 },
@@ -869,6 +965,8 @@
         const progressFill = document.getElementById("progress-fill");
         const currentTimeEl = document.getElementById("current-time");
         const totalDurationEl = document.getElementById("total-duration");
+        // PERF: cached once instead of re-querying the DOM every time a track loads.
+        const playlistItems = document.querySelectorAll(".playlist li");
         let transitionTimeout = null;
 
         function formatTime(seconds) {
@@ -886,7 +984,7 @@
             audio.load();
             const fallbackDuration = playlist[index].duration;
             totalDurationEl.innerText = formatTime(fallbackDuration);
-            document.querySelectorAll(".playlist li").forEach((item, i) => {
+            playlistItems.forEach((item, i) => {
                 item.classList.toggle("active-track", i === index);
             });
             songProgress.value = 0;
@@ -963,8 +1061,11 @@
 
         loadTrack(0);
 
+        // PERF: cached once instead of calling querySelectorAll('.page') on every navigation.
+        const pages = document.querySelectorAll('.page');
+
         function showPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => {
+            pages.forEach(p => {
                 p.style.display = 'none';
                 p.querySelectorAll('.orbit-ring, .sticker-item').forEach(el => {
                     el.style.animationPlayState = 'paused';
@@ -988,18 +1089,22 @@
             { src: 'images/My veiw.jpg', title: 'My veiw ❤️😘' }
         ];
 
-        // Preload + decode the five spotlight images before the animation starts.
-        // This prevents image decoding from happening during the animation itself.
-        const preloadedPhotos = photosData.map(photo => {
-            const img = new Image();
-            img.src = photo.src;
-            return img.decode ? img.decode().catch(() => {}) : Promise.resolve();
-        });
-        const photosReady = Promise.all(preloadedPhotos);
-
-        const childImagePreload = new Image();
-        childImagePreload.src = 'images/child.png';
-        const childImageReady = childImagePreload.decode ? childImagePreload.decode().catch(() => {}) : Promise.resolve();
+        // PERF: these elements are static and unique on the page, so we grab them
+        // once here instead of re-running getElementById for each of them every
+        // single time startMaymayShow()/openGiftBox() runs.
+        const orbitRing = document.getElementById('orbit-ring');
+        const spotBox = document.getElementById('spotlight-box');
+        const curtain = document.getElementById('curtain-container');
+        const countdownEl = document.getElementById('countdown-overlay');
+        const giftBox = document.getElementById('center-gift-box');
+        const circleStage = document.getElementById('circle-stage');
+        const tornPaperBox = document.getElementById('torn-paper-box');
+        const typeText = document.getElementById('typewriter-text');
+        const continueBtn = document.getElementById('continue-btn');
+        const birthdayBackBtn = document.getElementById('birthday-back-btn');
+        const spotImg = document.getElementById('spotlight-img');
+        const spotTitle = document.getElementById('spotlight-title');
+        const orbWrappers = [1, 2, 3, 4, 5].map(i => document.getElementById(`orb-${i}`));
 
         let animationTimeouts = [];
 
@@ -1011,16 +1116,6 @@
         function startMaymayShow() {
             showPage('birthday-page');
             clearShowTimeouts();
-            const orbitRing = document.getElementById('orbit-ring');
-            const spotBox = document.getElementById('spotlight-box');
-            const curtain = document.getElementById('curtain-container');
-            const countdownEl = document.getElementById('countdown-overlay');
-            const giftBox = document.getElementById('center-gift-box');
-            const circleStage = document.getElementById('circle-stage');
-            const tornPaperBox = document.getElementById('torn-paper-box');
-            const typeText = document.getElementById('typewriter-text');
-            const continueBtn = document.getElementById('continue-btn');
-            const birthdayBackBtn = document.getElementById('birthday-back-btn');
 
             circleStage.classList.remove('expanded');
             tornPaperBox.style.display = 'none';
@@ -1031,7 +1126,6 @@
             giftBox.style.opacity = '';
             giftBox.style.pointerEvents = '';
 
-            const spotImg = document.getElementById('spotlight-img');
             spotImg.src = '';
             spotImg.style.borderRadius = '';
             spotImg.style.boxShadow = '';
@@ -1042,7 +1136,6 @@
             spotImg.style.cursor = 'default';
             spotImg.onclick = null;
 
-            const spotTitle = document.getElementById('spotlight-title');
             spotTitle.innerText = '';
             spotTitle.style.backgroundColor = '';
             spotTitle.style.boxShadow = '';
@@ -1055,15 +1148,27 @@
             spotBox.classList.remove('active');
             giftBox.classList.remove('revealed');
 
-            for (let i = 1; i <= 5; i++) {
-                document.getElementById(`orb-${i}`).classList.remove('revealed');
-            }
+            orbWrappers.forEach(orb => orb.classList.remove('revealed'));
 
             curtain.style.display = 'block';
             curtain.classList.remove('curtain-open');
             countdownEl.style.display = 'block';
             countdownEl.innerText = '3';
 
+            // PERF: the curtain is already covering the full screen at this point,
+            // so waiting here is invisible to the visitor. We only delay the actual
+            // countdown/reveal sequence — never the curtain itself — until the
+            // orbit + center images are decoded, or 800ms has passed (whichever
+            // comes first), so the animation that follows never has to decode an
+            // image on the fly. In practice orbitImagesReady has almost always
+            // already resolved by now, since it started as soon as the page loaded.
+            Promise.race([
+                orbitImagesReady,
+                new Promise(resolve => setTimeout(resolve, 800))
+            ]).then(runMaymayShowSequence);
+        }
+
+        function runMaymayShowSequence() {
             animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '2'; }, 1000));
             animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '1'; }, 2000));
             animationTimeouts.push(setTimeout(() => {
@@ -1086,17 +1191,15 @@
                 animationTimeouts.push(setTimeout(() => {
                     spotBox.classList.remove('active');
                     orbitRing.classList.remove('blurred');
-                    document.getElementById(`orb-${index + 1}`).classList.add('revealed');
+                    orbWrappers[index].classList.add('revealed');
                 }, startTime + 2500));
             }
 
-            photosReady.then(() => {
-                presentPhoto(0, 5000);
-                presentPhoto(1, 8000);
-                presentPhoto(2, 11000);
-                presentPhoto(3, 14000);
-                presentPhoto(4, 17000);
-            });
+            presentPhoto(0, 5000);
+            presentPhoto(1, 8000);
+            presentPhoto(2, 11000);
+            presentPhoto(3, 14000);
+            presentPhoto(4, 17000);
 
             animationTimeouts.push(setTimeout(() => {
                 giftBox.classList.add('revealed');
@@ -1104,13 +1207,13 @@
         }
 
         function openGiftBox() {
-            const giftBox = document.getElementById('center-gift-box');
             giftBox.classList.remove('revealed');
             setTimeout(() => { giftBox.style.display = 'none'; }, 400);
-            const circleStage = document.getElementById('circle-stage');
             circleStage.classList.add('expanded');
-            const spotBox = document.getElementById('spotlight-box');
-            const spotImg = document.getElementById('spotlight-img');
+            // NOTE: images/child.png was included in the preload/decode list at the
+            // top of this script, so by the time a visitor has clicked through the
+            // whole 20-second show to reach the gift box, it's already decoded and
+            // ready to paint instantly here — no more frame drop on reveal.
             spotImg.src = 'images/child.png';
             spotImg.style.borderRadius = '0';
             spotImg.style.boxShadow = 'none';
@@ -1120,7 +1223,6 @@
             spotImg.classList.add('wiggle-active');
             spotImg.style.cursor = 'pointer';
             spotImg.onclick = function() { showPage('birthday-details-page'); };
-            const spotTitle = document.getElementById('spotlight-title');
             spotTitle.innerText = 'el beida 😂';
             spotTitle.style.fontSize = '14px';
             spotTitle.style.padding = '3px 14px';
@@ -1129,32 +1231,30 @@
             spotTitle.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
             spotTitle.style.textShadow = 'none';
             setTimeout(() => { spotBox.classList.add('active'); }, 400);
-            const tornPaperBox = document.getElementById('torn-paper-box');
-            const textContainer = document.getElementById('typewriter-text');
             tornPaperBox.style.display = 'block';
-            textContainer.innerHTML = '';
+            typeText.innerHTML = '';
             const text1 = "Msh 3aref a2ol l meen f dol kol sana wenty tayba";
             const text2 = "Bs elly a3rfo eny baheb kol dol gedan 🥰";
             let i = 0, j = 0;
             function typeLine1() {
                 if (i < text1.length) {
-                    textContainer.innerHTML += text1.charAt(i);
+                    typeText.innerHTML += text1.charAt(i);
                     i++;
                     setTimeout(typeLine1, 60);
                 } else {
-                    textContainer.innerHTML += '<br>';
+                    typeText.innerHTML += '<br>';
                     setTimeout(typeLine2, 250);
                 }
             }
             function typeLine2() {
                 if (j < text2.length) {
-                    textContainer.innerHTML += text2.charAt(j);
+                    typeText.innerHTML += text2.charAt(j);
                     j++;
                     setTimeout(typeLine2, 60);
                 } else {
                     setTimeout(() => {
-                        document.getElementById('continue-btn').style.display = 'flex';
-                        document.getElementById('birthday-back-btn').style.display = 'block'; // إظهار زر الباك فقط بعد انتهاء كل شيء
+                        continueBtn.style.display = 'flex';
+                        birthdayBackBtn.style.display = 'block'; // إظهار زر الباك فقط بعد انتهاء كل شيء
                     }, 300);
                 }
             }

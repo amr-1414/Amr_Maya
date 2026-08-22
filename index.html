@@ -21,13 +21,13 @@
 
         .page {
             min-height: 100vh;
-            padding: 30px 12px;
+            padding: 25px 12px;
             text-align: center;
             display: none;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            gap: 20px;
+            gap: 18px;
             position: relative;
             width: 100%;
             max-width: 100%;
@@ -46,7 +46,6 @@
             font-family: 'Cairo', sans-serif;
             font-weight: bold;
             font-size: 14px;
-            margin-bottom: 5px;
             align-self: flex-start;
             z-index: 10;
             touch-action: manipulation;
@@ -56,7 +55,6 @@
             background-color: #EAE0D0;
             color: #4A121A;
             padding: 10px 15px;
-            margin-bottom: 5px;
             width: 100%;
             max-width: 340px;
             font-family: 'Cairo', sans-serif;
@@ -229,7 +227,7 @@
         .player-card {
             background: #5e1a2e;
             width: 100%;
-            padding: 18px 14px;
+            padding: 16px 14px;
             border-radius: 18px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             direction: ltr;
@@ -237,22 +235,31 @@
 
         .top-section {
             display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 12px;
-            margin-bottom: 14px;
+            margin-bottom: 12px;
+        }
+
+        .player-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 8px;
         }
 
         .collage {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
-            gap: 3px;
-            width: 90px;
-            height: 90px;
-            border-radius: 10px;
+            gap: 2px;
+            width: 75px;
+            height: 75px;
+            border-radius: 8px;
             overflow: hidden;
             flex-shrink: 0;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
 
         .collage img {
@@ -267,12 +274,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             min-width: 0;
         }
 
         .title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             color: #f5d0c5;
             font-family: 'Cairo', sans-serif;
@@ -282,7 +289,9 @@
         .buttons {
             display: flex;
             align-items: center;
-            gap: 16px;
+            justify-content: center;
+            gap: 14px;
+            width: 100%;
         }
 
         .btn {
@@ -298,11 +307,12 @@
         }
 
         .btn svg { display: block; }
-        .btn-skip { width: 26px; height: 26px; }
+        .btn-skip { width: 24px; height: 24px; }
+        .btn-skip svg { width: 20px; height: 20px; fill: currentColor; }
 
         .btn-play {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             background: #EAE0D0;
             color: #4A121A;
@@ -311,8 +321,8 @@
 
         .btn-play svg {
             fill: #4A121A;
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             margin-left: 2px;
         }
 
@@ -364,8 +374,8 @@
         }
 
         .vinyl {
-            width: 90px;
-            height: 90px;
+            width: 75px;
+            height: 75px;
             border-radius: 50%;
             background: repeating-radial-gradient(circle at center, #1a1a1a 0px, #1a1a1a 6px, #333 7px, #333 8px);
             position: relative;
@@ -383,7 +393,7 @@
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 26px; height: 26px;
+            width: 22px; height: 22px;
             background: #8b252c;
             border-radius: 50%;
             border: 2px solid #1a1a1a;
@@ -392,18 +402,18 @@
         .playlist {
             list-style: none;
             background-color: #3b0c11;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border-radius: 10px;
-            margin-top: 12px;
+            margin-top: 10px;
         }
 
         .playlist li {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 7px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
-            font-size: 13px;
+            font-size: 12.5px;
             cursor: pointer;
             color: rgba(234,224,208,0.7);
             font-family: 'Cairo', sans-serif;
@@ -418,7 +428,7 @@
             justify-content: center;
             align-items: center;
             gap: 12px;
-            margin-top: 10px;
+            margin-top: 8px;
             width: 100%;
             flex-wrap: wrap;
         }
@@ -427,7 +437,7 @@
             background: #EAE0D0;
             color: #4A121A;
             border: 2px solid #4A121A;
-            padding: 12px 22px;
+            padding: 12px 20px;
             border-radius: 25px;
             font-family: 'Cairo', sans-serif;
             font-size: 14px;
@@ -716,37 +726,39 @@
         <div id="music-section">
             <div class="player-card">
                 <div class="top-section">
-                    <div class="collage">
-                        <img src="images/couple.jpg" alt="">
-                        <img src="images/p1.jpg" alt="">
-                        <img src="images/p2.jpg" alt="">
-                        <img src="images/p3.jpg" alt="">
-                    </div>
-                    <div class="controls-area">
-                        <div class="title">Playlist for my lover!</div>
-                        <div class="buttons">
-                            <button class="btn btn-skip" onclick="prevTrack()" title="السابق">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6.5C21 5.7 20.2 5.2 19.5 5.6L12.5 9.6C11.8 10 11.8 11 12.5 11.4L19.5 15.4C20.2 15.8 21 15.3 21 14.5V6.5Z"/><path d="M11.5 6.5C11.5 5.7 10.7 5.2 10 5.6L3 9.6C2.3 10 2.3 11 3 11.4L10 15.4C10.7 15.8 11.5 15.3 11.5 14.5V6.5Z"/></svg>
-                            </button>
-                            <button class="btn btn-play" id="play-btn" onclick="togglePlay()" title="تشغيل / إيقاف">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/></svg>
-                            </button>
-                            <button class="btn btn-skip" onclick="nextTrack()" title="التالي">
-                                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6.5C3 5.7 3.8 5.2 4.5 5.6L11.5 9.6C12.2 10 12.2 11 11.5 11.4L4.5 15.4C3.8 15.8 3 15.3 3 14.5V6.5Z"/><path d="M12.5 6.5C12.5 5.7 13.3 5.2 14 5.6L21 9.6C21.7 10 21.7 11 21 11.4L14 15.4C13.3 15.8 12.5 15.3 12.5 14.5V6.5Z"/></svg>
-                            </button>
+                    <div class="player-row">
+                        <div class="collage">
+                            <img src="images/couple.jpg" alt="">
+                            <img src="images/p1.jpg" alt="">
+                            <img src="images/p2.jpg" alt="">
+                            <img src="images/p3.jpg" alt="">
                         </div>
-                        <div class="progress-section">
-                            <div class="progress-track">
-                                <input type="range" id="song-progress" class="song-progress-new" value="0" max="100" step="0.1" oninput="seekSong(this.value)">
-                                <div class="progress-fill" id="progress-fill"></div>
-                            </div>
-                            <div class="time-row">
-                                <span id="current-time">0:00</span>
-                                <span id="total-duration">0:00</span>
+                        <div class="controls-area">
+                            <div class="title">Playlist for my lover!</div>
+                            <div class="buttons">
+                                <button class="btn btn-skip" onclick="prevTrack()" title="السابق">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 6.5C21 5.7 20.2 5.2 19.5 5.6L12.5 9.6C11.8 10 11.8 11 12.5 11.4L19.5 15.4C20.2 15.8 21 15.3 21 14.5V6.5Z"/><path d="M11.5 6.5C11.5 5.7 10.7 5.2 10 5.6L3 9.6C2.3 10 2.3 11 3 11.4L10 15.4C10.7 15.8 11.5 15.3 11.5 14.5V6.5Z"/></svg>
+                                </button>
+                                <button class="btn btn-play" id="play-btn" onclick="togglePlay()" title="تشغيل / إيقاف">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/></svg>
+                                </button>
+                                <button class="btn btn-skip" onclick="nextTrack()" title="التالي">
+                                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 6.5C3 5.7 3.8 5.2 4.5 5.6L11.5 9.6C12.2 10 12.2 11 11.5 11.4L4.5 15.4C3.8 15.8 3 15.3 3 14.5V6.5Z"/><path d="M12.5 6.5C12.5 5.7 13.3 5.2 14 5.6L21 9.6C21.7 10 21.7 11 21 11.4L14 15.4C13.3 15.8 12.5 15.3 12.5 14.5V6.5Z"/></svg>
+                                </button>
                             </div>
                         </div>
+                        <div class="vinyl" id="vinyl-disk"></div>
                     </div>
-                    <div class="vinyl" id="vinyl-disk"></div>
+                    <div class="progress-section">
+                        <div class="progress-track">
+                            <input type="range" id="song-progress" class="song-progress-new" value="0" max="100" step="0.1" oninput="seekSong(this.value)">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="time-row">
+                            <span id="current-time">0:00</span>
+                            <span id="total-duration">0:00</span>
+                        </div>
+                    </div>
                 </div>
                 <ul class="playlist">
                     <li class="active-track" id="track-0" onclick="playSelectedTrack(0)"><span>1 | Mayet 3leky 😉</span><span>06:09</span></li>
@@ -810,7 +822,7 @@
         <div class="torn-paper-box" id="torn-paper-box">
             <span id="typewriter-text"></span>
         </div>
-        <button id="continue-btn" class="btn-small" style="display: none; margin-top: 10px; font-size: 14px; padding: 8px 20px;" onclick="showPage('birthday-details-page')">😂Click on beida</button>
+        <button id="continue-btn" class="btn-small" style="display: none; margin-top: 10px; font-size: 14px; padding: 8px 20px;" onclick="showPage('birthday-details-page')">Click on beida 😂</button>
     </div>
 
     <div id="birthday-details-page" class="page">
@@ -1128,7 +1140,7 @@
             spotImg.style.cursor = 'pointer';
             spotImg.onclick = function() { showPage('birthday-details-page'); };
             const spotTitle = document.getElementById('spotlight-title');
-            spotTitle.innerText = 'El beida 😂😂';
+            spotTitle.innerText = 'el beida 😂';
             spotTitle.style.fontSize = '14px';
             spotTitle.style.padding = '3px 14px';
             spotTitle.style.backgroundColor = '#EAE0D0';

@@ -458,9 +458,10 @@
             align-items: center;
             gap: 8px; 
             opacity: 0;
-            transition: transform 0.5s ease, opacity 0.3s ease;
+            transition: transform 0.4s ease, opacity 0.2s ease;
             pointer-events: none;
             will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         #spotlight-box.active {
@@ -497,6 +498,7 @@
             align-items: center;
             transition: transform 0.8s ease;
             max-width: 100%;
+            transform: translateZ(0);
         }
 
         .circle-stage.expanded { transform: scale(1.1); }
@@ -519,9 +521,10 @@
             top: 50%; left: 50%;
             margin-top: -50px; margin-left: -40px;
             opacity: 0; transform: scale(0);
-            transition: all 0.6s ease;
+            transition: all 0.5s ease;
             display: flex; flex-direction: column; align-items: center;
             will-change: transform, opacity;
+            backface-visibility: hidden;
         }
 
         .orbit-img-wrapper.pos-1.revealed { transform: translate(0px, -130px) scale(1); opacity: 1; }
@@ -567,7 +570,7 @@
             position: absolute;
             width: 120px; height: 120px;
             z-index: 50; opacity: 0; transform: scale(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             cursor: pointer;
             will-change: transform, opacity;
@@ -683,7 +686,7 @@
                 <div class="time-box"><span class="num" id="minutes">0</span><span class="label">Minutes</span></div>
                 <div class="time-box"><span class="num" id="seconds">0</span><span class="label">Seconds</span></div>
             </div>
-            <h3 style="font-weight:900;font-size:18px;color:#EAE0D0;text-shadow:0 2px 6px rgba(0,0,0,0.4);margin-top:6px;">♥️♾️W hafdl daymn</h3>
+            <h3 style="font-weight:900;font-size:18px;color:#EAE0D0;text-shadow:0 2px 6px rgba(0,0,0,0.4);margin-top:6px;">W hafdl daymn♥️♾️</h3>
         </div>
 
         <div id="music-section">
@@ -736,7 +739,7 @@
     </div>
 
     <div id="birthday-page" class="page" style="justify-content: center;">
-        <button class="back-btn" onclick="showPage('main-page')" style="position: absolute; top: 15px; right: 15px;">← Back</button>
+        <button id="birthday-back-btn" class="back-btn" onclick="showPage('main-page')" style="position: absolute; top: 15px; right: 15px; display: none;">← Back</button>
         <div class="circle-stage" id="circle-stage">
             <div id="spotlight-box">
                 <img id="spotlight-img" class="spotlight-sticker-img" src="" alt="Spotlight">
@@ -999,16 +1002,19 @@
             const tornPaperBox = document.getElementById('torn-paper-box');
             const typeText = document.getElementById('typewriter-text');
             const continueBtn = document.getElementById('continue-btn');
+            const birthdayBackBtn = document.getElementById('birthday-back-btn');
 
             circleStage.classList.remove('expanded');
             tornPaperBox.style.display = 'none';
             typeText.innerHTML = '';
             continueBtn.style.display = 'none';
+            birthdayBackBtn.style.display = 'none';
             giftBox.style.display = 'flex';
             giftBox.style.opacity = '';
             giftBox.style.pointerEvents = '';
 
             const spotImg = document.getElementById('spotlight-img');
+            spotImg.src = '';
             spotImg.style.borderRadius = '';
             spotImg.style.boxShadow = '';
             spotImg.style.backgroundColor = '';
@@ -1019,6 +1025,7 @@
             spotImg.onclick = null;
 
             const spotTitle = document.getElementById('spotlight-title');
+            spotTitle.innerText = '';
             spotTitle.style.backgroundColor = '';
             spotTitle.style.boxShadow = '';
             spotTitle.style.fontSize = '';
@@ -1062,24 +1069,24 @@
                     spotBox.classList.remove('active');
                     orbitRing.classList.remove('blurred');
                     document.getElementById(`orb-${index + 1}`).classList.add('revealed');
-                }, startTime + 3000));
+                }, startTime + 2500));
             }
 
             presentPhoto(0, 5000);
-            presentPhoto(1, 8800);
-            presentPhoto(2, 12600);
-            presentPhoto(3, 16400);
-            presentPhoto(4, 20200);
+            presentPhoto(1, 8000);
+            presentPhoto(2, 11000);
+            presentPhoto(3, 14000);
+            presentPhoto(4, 17000);
 
             animationTimeouts.push(setTimeout(() => {
                 giftBox.classList.add('revealed');
-            }, 24000));
+            }, 20000));
         }
 
         function openGiftBox() {
             const giftBox = document.getElementById('center-gift-box');
             giftBox.classList.remove('revealed');
-            setTimeout(() => { giftBox.style.display = 'none'; }, 600);
+            setTimeout(() => { giftBox.style.display = 'none'; }, 400);
             const circleStage = document.getElementById('circle-stage');
             circleStage.classList.add('expanded');
             const spotBox = document.getElementById('spotlight-box');
@@ -1101,7 +1108,7 @@
             spotTitle.style.color = '#4A121A';
             spotTitle.style.boxShadow = '0 8px 20px rgba(0,0,0,0.5)';
             spotTitle.style.textShadow = 'none';
-            setTimeout(() => { spotBox.classList.add('active'); }, 500);
+            setTimeout(() => { spotBox.classList.add('active'); }, 400);
             const tornPaperBox = document.getElementById('torn-paper-box');
             const textContainer = document.getElementById('typewriter-text');
             tornPaperBox.style.display = 'block';
@@ -1113,24 +1120,25 @@
                 if (i < text1.length) {
                     textContainer.innerHTML += text1.charAt(i);
                     i++;
-                    setTimeout(typeLine1, 120);
+                    setTimeout(typeLine1, 60);
                 } else {
                     textContainer.innerHTML += '<br>';
-                    setTimeout(typeLine2, 500);
+                    setTimeout(typeLine2, 250);
                 }
             }
             function typeLine2() {
                 if (j < text2.length) {
                     textContainer.innerHTML += text2.charAt(j);
                     j++;
-                    setTimeout(typeLine2, 120);
+                    setTimeout(typeLine2, 60);
                 } else {
                     setTimeout(() => {
                         document.getElementById('continue-btn').style.display = 'flex';
-                    }, 500);
+                        document.getElementById('birthday-back-btn').style.display = 'block';
+                    }, 300);
                 }
             }
-            setTimeout(typeLine1, 1000);
+            setTimeout(typeLine1, 500);
         }
 
         function toggleNoContent() {

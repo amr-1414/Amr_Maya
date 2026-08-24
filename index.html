@@ -21,7 +21,13 @@
 
         .page {
             min-height: 100vh;
+            min-height: 100svh; /* MOBILE: small-viewport unit handles iOS Safari / Android
+                browser-chrome resizing better than 100vh; unsupported browsers simply
+                ignore this line and keep the 100vh above, so nothing regresses. */
             padding: 25px 12px;
+            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px)); /* MOBILE: keeps
+                content clear of the home-indicator on notched iPhones; evaluates to the
+                original 25px everywhere else. */
             text-align: center;
             display: none;
             flex-direction: column;
@@ -424,6 +430,16 @@
             align-items: center;
             gap: 6px;
             touch-action: manipulation;
+            /* #6: subtle premium press feedback — transform only (GPU-friendly),
+               short duration, springy-but-restrained easing. Not an infinite/looping
+               animation — it only runs on press/release. */
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+        }
+
+        .btn-small:active,
+        .btn-small:focus-visible {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
         }
 
         #curtain-container {
@@ -686,6 +702,99 @@
         }
         .sub-card h3 { font-family: 'Dancing Script', cursive; font-size: 26px; margin-top: 0; }
         .sub-card p { font-size: 14px; line-height: 1.6; margin-bottom: 10px; font-family: 'Cairo', sans-serif; }
+
+        /* ============================================================
+           MOBILE POLISH (max-width: 600px)
+           ------------------------------------------------------------
+           Everything below only applies to phones / small tablets.
+           Desktop (above 600px) keeps every rule above completely
+           untouched — colors, fonts, sizes, and the countdown/slider
+           layout on desktop are unchanged.
+           ============================================================ */
+        @media (max-width: 600px) {
+
+            /* #7 Spacing: these cards were capped at 340-360px while the
+               page itself allows more width on 390-430px phones, which is
+               what created the dead space on the sides. Letting them grow
+               up to 440px (but never past 100% of the available width)
+               makes the page use the screen properly without touching
+               colors, content, or the desktop layout. */
+            .torn-paper-note,
+            .torn-paper-box,
+            #timer-section,
+            #music-section,
+            .sub-card {
+                max-width: min(440px, 100%);
+            }
+
+            /* #3 The 14-image slider: ~13% larger + taller cards so the
+               section reads as a proper visual centerpiece on mobile,
+               without growing so large it swallows the surrounding UI.
+               Still transform/opacity-driven, nothing new animated. */
+            .slider-window {
+                max-width: min(320px, 94vw);
+            }
+            .slider-wrapper {
+                height: 385px;
+            }
+            .slide {
+                width: 260px;
+                height: 345px;
+            }
+            .landscape {
+                width: 278px !important;
+                height: 295px !important;
+            }
+            .slide-7 {
+                width: 272px !important;
+                height: 300px !important;
+            }
+            /* Neighbor "peek" offset scaled up to match the larger card
+               width, so prev/next cards peek out by the same proportion
+               as before (was -90px/90px on a 230px-wide card). */
+            .slide.next { transform: translateX(-100px) scale(0.75); }
+            .slide.prev { transform: translateX(100px) scale(0.75); }
+
+            /* #4 Arrows: verified — right-btn already shows a right-pointing
+               chevron (&#10095;) and calls moveSlide(1) (next); left-btn
+               already shows a left-pointing chevron (&#10094;) and calls
+               moveSlide(-1) (previous). Direction was already correct, so
+               only touch comfort is improved here: ~44px tap targets,
+               pulled in 2px so they never sit flush against the screen edge. */
+            .nav-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
+            }
+            .right-btn { right: 2px; }
+            .left-btn { left: 2px; }
+
+            /* #2 Countdown: 2x2 grid instead of one row. The HTML order is
+               already Days, Hours, Minutes, Seconds, so a simple 2-column
+               grid lays out exactly as:
+                   DAYS   HOURS
+                   MINS   SECS
+               with zero changes to the markup. */
+            .timer-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 10px;
+                max-width: 300px;
+                margin: 10px auto;
+            }
+            .time-box {
+                padding: 14px 6px;
+                border-radius: 14px;
+            }
+            .time-box span.num {
+                font-size: 28px;
+            }
+            .time-box span.label {
+                font-size: 11px;
+                letter-spacing: 0.5px;
+            }
+        }
     </style>
 <base target="_blank">
 </head>

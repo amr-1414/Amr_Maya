@@ -18,16 +18,12 @@
             font-family: 'Cairo', sans-serif;
             -webkit-font-smoothing: antialiased;
         }
- 
+
         .page {
             min-height: 100vh;
-            min-height: 100svh; /* MOBILE: small-viewport unit handles iOS Safari / Android
-                browser-chrome resizing better than 100vh; unsupported browsers simply
-                ignore this line and keep the 100vh above, so nothing regresses. */
+            min-height: 100svh;
             padding: 25px 12px;
-            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px)); /* MOBILE: keeps
-                content clear of the home-indicator on notched iPhones; evaluates to the
-                original 25px everywhere else. */
+            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
             text-align: center;
             display: none;
             flex-direction: column;
@@ -39,9 +35,9 @@
             max-width: 100%;
             margin: 0 auto;
         }
- 
+
         #main-page { display: flex; }
- 
+
         .back-btn {
             background-color: transparent;
             color: #EAE0D0;
@@ -56,7 +52,7 @@
             z-index: 10;
             touch-action: manipulation;
         }
- 
+
         .torn-paper-note {
             background-color: #EAE0D0;
             color: #4A121A;
@@ -75,8 +71,7 @@
             position: relative;
             clip-path: polygon(0% 4%, 3% 0%, 7% 5%, 12% 1%, 17% 4%, 22% 1%, 28% 5%, 33% 2%, 39% 5%, 44% 1%, 50% 4%, 55% 1%, 61% 5%, 66% 2%, 72% 4%, 77% 1%, 83% 5%, 88% 2%, 94% 4%, 98% 1%, 100% 4%, 99% 15%, 100% 30%, 98% 45%, 100% 60%, 99% 75%, 100% 90%, 98% 97%, 95% 100%, 90% 96%, 85% 99%, 80% 95%, 74% 98%, 68% 95%, 62% 99%, 56% 96%, 50% 99%, 44% 95%, 38% 99%, 32% 96%, 26% 99%, 20% 95%, 14% 99%, 8% 96%, 3% 99%, 0% 96%, 1% 85%, 0% 70%, 2% 55%, 0% 40%, 1% 25%, 0% 10%);
         }
- 
-        /* تنسيق الورقة المقصوصة المطابق تماماً لشكل الجملة العلوية */
+
         .torn-paper-box {
             background-color: #EAE0D0;
             color: #4A121A;
@@ -95,7 +90,7 @@
             direction: ltr;
             clip-path: polygon(0% 4%, 3% 0%, 7% 5%, 12% 1%, 17% 4%, 22% 1%, 28% 5%, 33% 2%, 39% 5%, 44% 1%, 50% 4%, 55% 1%, 61% 5%, 66% 2%, 72% 4%, 77% 1%, 83% 5%, 88% 2%, 94% 4%, 98% 1%, 100% 4%, 99% 15%, 100% 30%, 98% 45%, 100% 60%, 99% 75%, 100% 90%, 98% 97%, 95% 100%, 90% 96%, 85% 99%, 80% 95%, 74% 98%, 68% 95%, 62% 99%, 56% 96%, 50% 99%, 44% 95%, 38% 99%, 32% 96%, 26% 99%, 20% 95%, 14% 99%, 8% 96%, 3% 99%, 0% 96%, 1% 85%, 0% 70%, 2% 55%, 0% 40%, 1% 25%, 0% 10%);
         }
- 
+
         .slider-window {
             background-color: transparent;
             padding: 0;
@@ -103,7 +98,7 @@
             max-width: 280px;
             margin: 0 auto;
         }
- 
+
         .slider-wrapper {
             position: relative;
             width: 100%;
@@ -113,7 +108,7 @@
             align-items: center;
             overflow: visible;
         }
- 
+
         .slide {
             position: absolute;
             width: 230px;
@@ -122,25 +117,17 @@
             padding: 6px 6px 25px 6px;
             border-radius: 12px;
             object-fit: cover;
-            /* PERF: was `transition: all 0.4s ease-in-out`. "all" makes the browser
-               watch every property (including box-shadow / border-radius, which never
-               actually change) for changes each frame. Restricting the transition to
-               transform + opacity keeps this animation on the compositor thread. */
             transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             opacity: 0;
             transform: scale(0.5);
             z-index: 1;
         }
- 
-        /* PERF: will-change is scoped to only the 3 slides that are actually
-           transitioning at any given moment (active/prev/next), not all 14 photos.
-           Promoting every slide to its own GPU layer would waste memory on mobile;
-           promoting only the 3 in motion gets the same smoothness for free. */
+
         .slide.active, .slide.prev, .slide.next {
             will-change: transform, opacity;
         }
- 
+
         .landscape {
             width: 245px !important;
             height: 260px !important;
@@ -148,7 +135,7 @@
             object-fit: contain !important;
             background-color: #EAE0D0 !important;
         }
- 
+
         .slide-7 {
             width: 240px !important;
             height: 265px !important;
@@ -156,25 +143,25 @@
             object-fit: contain !important;
             background-color: #EAE0D0 !important;
         }
- 
+
         .slide.active {
             opacity: 1;
             transform: translateX(0) scale(1);
             z-index: 3;
         }
- 
+
         .slide.next {
             opacity: 0.3;
             transform: translateX(-90px) scale(0.75);
             z-index: 2;
         }
- 
+
         .slide.prev {
             opacity: 0.3;
             transform: translateX(90px) scale(0.75);
             z-index: 2;
         }
- 
+
         .nav-btn {
             position: absolute;
             top: 50%;
@@ -195,16 +182,16 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             touch-action: manipulation;
         }
- 
+
         .right-btn { right: -5px; }
         .left-btn { left: -5px; }
- 
+
         #timer-section {
             width: 100%;
             max-width: 360px;
             text-align: center;
         }
- 
+
         .timer-container {
             display: flex;
             justify-content: space-between;
@@ -213,7 +200,7 @@
             margin-top: 10px;
             margin-bottom: 10px;
         }
- 
+
         .time-box {
             display: flex;
             flex-direction: column;
@@ -224,20 +211,20 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             flex: 1;
         }
- 
+
         .time-box span.num {
             font-size: 20px;
             font-weight: bold;
             color: #4A121A;
         }
- 
+
         .time-box span.label {
             font-size: 11px;
             color: #6a1f2d;
             margin-top: 2px;
             font-weight: bold;
         }
- 
+
         #music-section {
             width: 100%;
             max-width: 360px;
@@ -245,7 +232,7 @@
             justify-content: center;
             align-items: center;
         }
- 
+
         .player-card {
             background: #5e1a2e;
             width: 100%;
@@ -254,14 +241,14 @@
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             direction: ltr;
         }
- 
+
         .top-section {
             display: flex;
             align-items: center;
             gap: 15px;
             margin-bottom: 14px;
         }
- 
+
         .collage {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -274,14 +261,14 @@
             flex-shrink: 0;
             box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
- 
+
         .collage img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
- 
+
         .controls-area {
             flex: 1;
             display: flex;
@@ -290,7 +277,7 @@
             gap: 12px;
             min-width: 0;
         }
- 
+
         .title {
             font-size: 14px;
             font-weight: bold;
@@ -298,7 +285,7 @@
             font-family: 'Cairo', sans-serif;
             text-align: center;
         }
- 
+
         .buttons {
             display: flex;
             align-items: center;
@@ -306,7 +293,7 @@
             gap: 22px;
             width: 100%;
         }
- 
+
         .btn {
             background: transparent;
             border: none;
@@ -318,11 +305,11 @@
             padding: 0;
             touch-action: manipulation;
         }
- 
+
         .btn svg { display: block; }
         .btn-skip { width: 30px; height: 30px; }
         .btn-skip svg { width: 24px; height: 24px; fill: currentColor; }
- 
+
         .btn-play {
             width: 45px;
             height: 45px;
@@ -331,21 +318,21 @@
             color: #4A121A;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
- 
+
         .btn-play svg {
             fill: #4A121A;
             width: 18px;
             height: 18px;
             margin-left: 2px;
         }
- 
+
         .progress-section {
             width: 100%;
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
- 
+
         .progress-track {
             width: 100%;
             height: 6px;
@@ -355,7 +342,7 @@
             overflow: hidden;
             cursor: pointer;
         }
- 
+
         .song-progress-new {
             position: absolute;
             top: 0; left: 0;
@@ -365,14 +352,14 @@
             z-index: 5;
             -webkit-appearance: none;
         }
- 
+
         .progress-fill {
             width: 0%;
             height: 100%;
             background: #d4c4c4;
             border-radius: 2px;
         }
- 
+
         .time-row {
             display: flex;
             justify-content: space-between;
@@ -380,7 +367,7 @@
             color: #d4c4c4;
             padding: 0 2px;
         }
- 
+
         .playlist {
             list-style: none;
             background-color: #3b0c11;
@@ -388,7 +375,7 @@
             border-radius: 10px;
             margin-top: 12px;
         }
- 
+
         .playlist li {
             display: flex;
             justify-content: space-between;
@@ -401,10 +388,10 @@
             font-family: 'Cairo', sans-serif;
             gap: 8px;
         }
- 
+
         .playlist li:last-child { border-bottom: none; }
         .playlist li.active-track { color: #EAE0D0; font-weight: bold; }
- 
+
         .action-row {
             display: flex;
             justify-content: center;
@@ -414,7 +401,7 @@
             width: 100%;
             flex-wrap: wrap;
         }
- 
+
         .btn-small {
             background: #EAE0D0;
             color: #4A121A;
@@ -430,18 +417,15 @@
             align-items: center;
             gap: 6px;
             touch-action: manipulation;
-            /* #6: subtle premium press feedback — transform only (GPU-friendly),
-               short duration, springy-but-restrained easing. Not an infinite/looping
-               animation — it only runs on press/release. */
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
         }
- 
+
         .btn-small:active,
         .btn-small:focus-visible {
             transform: scale(1.05);
             box-shadow: 0 6px 16px rgba(0,0,0,0.35);
         }
- 
+
         #curtain-container {
             position: fixed;
             top: 0; left: 0;
@@ -450,7 +434,7 @@
             display: none;
             pointer-events: none;
         }
- 
+
         .curtain-panel {
             position: absolute;
             top: 0; width: 50%; height: 100%;
@@ -459,13 +443,13 @@
             z-index: 2;
             will-change: transform;
         }
- 
+
         .curtain-left { left: 0; border-right: 2px solid rgba(234,224,208,0.3); }
         .curtain-right { right: 0; border-left: 2px solid rgba(234,224,208,0.3); }
- 
+
         .curtain-open .curtain-left { transform: translateX(-100%); }
         .curtain-open .curtain-right { transform: translateX(100%); }
- 
+
         #countdown-overlay {
             position: absolute;
             top: 50%; left: 50%;
@@ -477,7 +461,7 @@
             text-shadow: 0 0 20px rgba(234,224,208,0.8);
             pointer-events: none;
         }
- 
+
         #spotlight-box {
             position: absolute;
             top: 50%; left: 50%;
@@ -493,20 +477,20 @@
             will-change: transform, opacity;
             backface-visibility: hidden;
         }
- 
+
         #spotlight-box.active {
             opacity: 1;
             transform: translate(-50%,-50%) scale(1);
             pointer-events: auto; 
         }
- 
+
         .spotlight-sticker-img {
             width: 150px; height: 150px;
             object-fit: cover;
             border-radius: 50%; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.6);
         }
- 
+
         .spotlight-sticker-text {
             background-color: #EAE0D0; 
             color: #4A121A; 
@@ -518,7 +502,7 @@
             display: flex; align-items: center; gap: 4px;
             direction: ltr;
         }
- 
+
         .circle-stage {
             position: relative;
             width: 340px; height: 340px;
@@ -528,39 +512,21 @@
             align-items: center;
             transition: transform 0.8s ease;
             max-width: 100%;
-            /* RESPONSIVE: a CSS custom property so we can uniformly rescale the whole
-               orbit (see the media query below) with a single transform instead of
-               resizing the stage and having to recompute every child's translate()
-               value by hand. Default 1 = pixel-identical to the original on any
-               screen wide enough to fit 340px. */
             --orbit-scale: 1;
             transform: translateZ(0) scale(var(--orbit-scale));
-            /* PERF: this element is transformed on "expanded" (and pre-scaled on
-               narrow screens), so it benefits from being on its own compositor layer. */
             will-change: transform;
-            /* PERF: everything that moves in this section (orbit rotation, spotlight,
-               gift box) is absolutely positioned inside this box and never affects
-               anything outside it, so `contain: layout` lets the browser skip
-               recalculating the rest of the page's layout during the animation.
-               (Not `paint`/`strict` — those would clip children and change the look.) */
             contain: layout;
         }
- 
+
         .circle-stage.expanded { transform: translateZ(0) scale(calc(var(--orbit-scale) * 1.1)); }
- 
-        /* RESPONSIVE: the fixed 340px stage + 12px page padding overflows on
-           ~360px-wide phones (iPhone SE / small Android). Rather than resizing the
-           stage — which would require recalculating every orb-N translate() value
-           and could look different from the original — we scale the whole group
-           down uniformly. The circular shape, relative positions, rotation
-           direction and speed all stay exactly the same, just smaller. */
+
         @media (max-width: 360px) {
             .circle-stage { --orbit-scale: 0.82; }
         }
- 
+
         @keyframes rotateOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes counterRotate { from { transform: rotate(0deg); } to { transform: rotate(-360deg); } }
- 
+
         .orbit-ring {
             position: absolute;
             width: 100%; height: 100%;
@@ -568,30 +534,26 @@
             will-change: transform;
             transform: translateZ(0);
         }
- 
+
         .orbit-ring.blurred { opacity: 0.3; }
- 
+
         .orbit-img-wrapper {
             position: absolute;
             top: 50%; left: 50%;
             margin-top: -50px; margin-left: -40px;
             opacity: 0; transform: scale(0);
-            /* PERF: was `transition: all 0.5s ease`. Scoping this to the two
-               properties that actually change (transform, opacity) keeps the
-               center -> orbit move on the compositor instead of the browser
-               re-checking every property (box-shadow, etc.) on every frame. */
             transition: transform 0.5s ease, opacity 0.5s ease;
             display: flex; flex-direction: column; align-items: center;
             will-change: transform, opacity;
             backface-visibility: hidden;
         }
- 
+
         .orbit-img-wrapper.pos-1.revealed { transform: translate(0px, -130px) scale(1); opacity: 1; }
         .orbit-img-wrapper.pos-2.revealed { transform: translate(123px, -40px) scale(1); opacity: 1; }
         .orbit-img-wrapper.pos-3.revealed { transform: translate(76px, 105px) scale(1); opacity: 1; }
         .orbit-img-wrapper.pos-4.revealed { transform: translate(-76px, 105px) scale(1); opacity: 1; }
         .orbit-img-wrapper.pos-5.revealed { transform: translate(-123px, -40px) scale(1); opacity: 1; }
- 
+
         .sticker-item {
             width: 100%;
             display: flex; flex-direction: column; align-items: center; gap: 6px; 
@@ -599,14 +561,14 @@
             will-change: transform;
             transform: translateZ(0);
         }
- 
+
         .sticker-item img {
             width: 75px; height: 75px;
             object-fit: cover; border-radius: 50%; 
             box-shadow: 0 6px 15px rgba(0,0,0,0.4);
             border: 2px solid #EAE0D0;
         }
- 
+
         .sticker-text {
             background-color: #EAE0D0; color: #4A121A; 
             font-size: 10px; font-weight: 700;
@@ -616,7 +578,7 @@
             white-space: nowrap; display: flex; align-items: center; gap: 3px;
             direction: ltr;
         }
- 
+
         @keyframes giftWiggle {
             0% { transform: rotate(0deg) scale(1); }
             15% { transform: rotate(-10deg) scale(1.04); }
@@ -624,7 +586,7 @@
             45% { transform: rotate(-6deg) scale(1.02); }
             100% { transform: rotate(0deg) scale(1); }
         }
- 
+
         .center-gift-box {
             position: absolute;
             width: 120px; height: 120px;
@@ -635,28 +597,28 @@
             will-change: transform, opacity;
             touch-action: manipulation;
         }
- 
+
         .center-gift-box.revealed { opacity: 1; transform: scale(1); }
         .center-gift-box.revealed .gift-img { animation: giftWiggle 1.2s infinite ease-in-out; }
- 
+
         .gift-img {
             width: 85px; height: 85px;
             object-fit: contain;
             filter: drop-shadow(0 6px 15px rgba(0,0,0,0.5));
         }
- 
+
         .gift-hint {
             margin-top: 4px; font-size: 11px; font-weight: bold;
             color: #EAE0D0; text-shadow: 0 2px 4px rgba(0,0,0,0.8);
             font-family: 'Cairo', sans-serif; direction: ltr;
         }
- 
+
         @keyframes wiggle {
             0%, 100% { transform: rotate(-4deg) scale(1); }
             50% { transform: rotate(4deg) scale(1.02); }
         }
         .wiggle-active { animation: wiggle 1.8s infinite ease-in-out !important; }
- 
+
         #login-overlay, #welcome-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #4A121A; 
@@ -665,29 +627,29 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             z-index: 3000; padding: 16px;
         }
- 
+
         #welcome-screen { display: none; z-index: 2500; text-align: center; }
- 
+
         .safe-title {
             font-family: 'Dancing Script', cursive; 
             color: #EAE0D0; font-size: 38px; margin-bottom: 12px; text-align: center; line-height: 1.1; text-shadow: 0 4px 10px rgba(0,0,0,0.5); 
         }
- 
+
         .login-box {
             background-color: #360D13; padding: 24px 16px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); width: 100%; max-width: 310px; text-align: center; border: 2px solid #EAE0D0; 
         }
- 
+
         .login-box h2 { color: #EAE0D0; margin-bottom: 16px; font-size: 16px; font-weight: 400; }
- 
+
         .pin-display { display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; direction: ltr; }
         .pin-box { width: 50px; height: 55px; border: 2px solid #EAE0D0; border-radius: 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: #EAE0D0; background-color: transparent; font-weight: bold; }
- 
+
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 5px; direction: ltr; }
         .key-btn { background-color: transparent; color: #EAE0D0; border: 2px solid #EAE0D0; border-radius: 50%; width: 58px; height: 58px; font-size: 20px; font-weight: bold; display: flex; justify-content: center; align-items: center; margin: 0 auto; cursor: pointer; font-family: 'Cairo', sans-serif; touch-action: manipulation; }
         .key-btn:active { background-color: rgba(234,224,208,0.2); transform: scale(0.92); }
         .action-key { background-color: #EAE0D0 !important; color: #4A121A !important; font-size: 16px; font-weight: bold; }
         #error-msg { color: #EAE0D0; font-size: 13px; display: none; margin-top: 12px; font-weight: bold; }
- 
+
         .sub-card {
             background-color: #EAE0D0;
             color: #4A121A;
@@ -702,38 +664,28 @@
         }
         .sub-card h3 { font-family: 'Dancing Script', cursive; font-size: 26px; margin-top: 0; }
         .sub-card p { font-size: 14px; line-height: 1.6; margin-bottom: 10px; font-family: 'Cairo', sans-serif; }
- 
+
         /* ============================================================
            MESSAGE FOR HALAWYAT — envelope.png based design
            ------------------------------------------------------------
-           Dedicated classes only (message-envelope-page, envelope-wrapper,
-           envelope-image, envelope-title, letter-content, flower-sticker,
-           flower-left, flower-right) — nothing shared with .sub-card,
-           .btn-small, .back-btn, etc. is touched or overridden.
- 
-           The envelope itself is the actual envelope.png asset (not
-           CSS-drawn), scaled with width:100%/height:auto so its exact
-           proportions, folds, colors and shadow are preserved at every
-           screen size. Text is positioned with percentage offsets
-           calibrated against the real image (paper visible from ~4% to
-           ~67% of the image height, ~16%–80% of its width; the solid
-           pink flap area for the "For You" label sits around ~81% down).
+           تم تعديل الـ margin والـ positioning هنا ليصبح الظرف
+           في منتصف شاشة الموبايل بالظبط عمودياً وأفقياً.
            ============================================================ */
         .message-envelope-page {
             position: relative;
             width: 100%;
             max-width: 420px;
-            margin: 0 auto;
+            margin: auto auto; /* يحافظ عليه في المنتصف تماماً عمودياً */
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-top: 4px;
+            justify-content: center;
         }
- 
+
         .envelope-wrapper {
             position: relative;
             width: min(320px, 80vw);
-            margin: 10px auto 0;
+            margin: 0 auto;
             opacity: 0;
             transform: scale(0.92) translateY(6px);
         }
@@ -743,18 +695,16 @@
         @keyframes envelopeEnter {
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
- 
+
         .envelope-image {
             display: block;
             width: 100%;
-            height: auto; /* keeps the exact 447:559 aspect ratio of envelope.png */
+            height: auto;
             filter: drop-shadow(0 16px 24px rgba(0,0,0,0.35));
             pointer-events: none;
             -webkit-user-drag: none;
         }
- 
-        /* "For You ❤️" — sits ON the pink flap of the envelope image itself,
-           not on the paper. Calibrated to the solid lower-flap area. */
+
         .envelope-title {
             position: absolute;
             left: 50%;
@@ -773,8 +723,7 @@
             animation: msgFadeIn 0.6s ease-out 0.55s forwards;
         }
         @keyframes msgFadeIn { to { opacity: 1; } }
- 
-        /* The Arabic message — sits ONLY inside the visible white paper area. */
+
         .letter-content {
             position: absolute;
             left: 17%;
@@ -794,7 +743,7 @@
         @keyframes letterRiseIn {
             to { opacity: 1; transform: translateY(0); }
         }
- 
+
         .letter-content p {
             direction: rtl;
             color: #4A121A;
@@ -804,8 +753,7 @@
             margin-bottom: 5%;
         }
         .letter-content p:last-child { margin-bottom: 0; }
- 
-        /* Flower bouquet stickers */
+
         .flower-sticker {
             position: absolute;
             top: -2%;
@@ -818,46 +766,32 @@
         }
         .flower-left  { left: -1%;  transform-origin: 50% 4%; }
         .flower-right { right: -1%; transform-origin: 50% 4%; }
- 
+
+        /* تم تسريع حركة الورد (من 4.6s/5.2s إلى 3.4s/3.8s لتبدو أسرع وأكثر حيوية) */
         .msg-anim-play .flower-left {
             animation: flowerFadeIn 0.5s ease-out 0.15s forwards,
-                       swayLeft 4.6s ease-in-out 1.15s infinite;
+                       swayLeft 3.4s ease-in-out 1.15s infinite;
         }
         .msg-anim-play .flower-right {
             animation: flowerFadeIn 0.5s ease-out 0.25s forwards,
-                       swayRight 5.2s ease-in-out 1.25s infinite;
+                       swayRight 3.8s ease-in-out 1.25s infinite;
         }
         @keyframes flowerFadeIn { to { opacity: 1; } }
         @keyframes swayLeft {
-            0%, 100% { transform: rotate(-4deg); }
-            50%      { transform: rotate(4deg); }
+            0%, 100% { transform: rotate(-5deg); }
+            50%      { transform: rotate(5deg); }
         }
         @keyframes swayRight {
-            0%, 100% { transform: rotate(4deg); }
-            50%      { transform: rotate(-4deg); }
+            0%, 100% { transform: rotate(5deg); }
+            50%      { transform: rotate(-5deg); }
         }
- 
+
         @media (max-width: 380px) {
             .letter-content p { font-size: clamp(8px, 2.2vw, 10.5px); line-height: 1.42; }
             .flower-sticker { width: clamp(54px, 17vw, 78px); }
         }
- 
-        /* ============================================================
-           MOBILE POLISH (max-width: 600px)
-           ------------------------------------------------------------
-           Everything below only applies to phones / small tablets.
-           Desktop (above 600px) keeps every rule above completely
-           untouched — colors, fonts, sizes, and the countdown/slider
-           layout on desktop are unchanged.
-           ============================================================ */
+
         @media (max-width: 600px) {
- 
-            /* #7 Spacing: these cards were capped at 340-360px while the
-               page itself allows more width on 390-430px phones, which is
-               what created the dead space on the sides. Letting them grow
-               up to 440px (but never past 100% of the available width)
-               makes the page use the screen properly without touching
-               colors, content, or the desktop layout. */
             .torn-paper-note,
             .torn-paper-box,
             #timer-section,
@@ -865,11 +799,6 @@
             .sub-card {
                 max-width: min(440px, 100%);
             }
- 
-            /* #3 The 14-image slider: ~13% larger + taller cards so the
-               section reads as a proper visual centerpiece on mobile,
-               without growing so large it swallows the surrounding UI.
-               Still transform/opacity-driven, nothing new animated. */
             .slider-window {
                 max-width: min(320px, 94vw);
             }
@@ -888,18 +817,8 @@
                 width: 272px !important;
                 height: 300px !important;
             }
-            /* Neighbor "peek" offset scaled up to match the larger card
-               width, so prev/next cards peek out by the same proportion
-               as before (was -90px/90px on a 230px-wide card). */
             .slide.next { transform: translateX(-100px) scale(0.75); }
             .slide.prev { transform: translateX(100px) scale(0.75); }
- 
-            /* #4 Arrows: verified — right-btn already shows a right-pointing
-               chevron (&#10095;) and calls moveSlide(1) (next); left-btn
-               already shows a left-pointing chevron (&#10094;) and calls
-               moveSlide(-1) (previous). Direction was already correct, so
-               only touch comfort is improved here: ~44px tap targets,
-               pulled in 2px so they never sit flush against the screen edge. */
             .nav-btn {
                 width: 44px;
                 height: 44px;
@@ -907,13 +826,6 @@
             }
             .right-btn { right: 2px; }
             .left-btn { left: 2px; }
- 
-            /* #2 Countdown: 2x2 grid instead of one row. The HTML order is
-               already Days, Hours, Minutes, Seconds, so a simple 2-column
-               grid lays out exactly as:
-                   DAYS   HOURS
-                   MINS   SECS
-               with zero changes to the markup. */
             .timer-container {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -933,10 +845,6 @@
                 font-size: 11px;
                 letter-spacing: 0.5px;
             }
- 
-            /* Message page: keep the envelope comfortably framed with
-               room for the flower stickers at the corners on narrow
-               iPhone/Android widths. */
             .message-envelope-page { max-width: min(400px, 100%); }
             .envelope-wrapper { width: min(280px, 76vw); }
         }
@@ -944,16 +852,16 @@
 <base target="_blank">
 </head>
 <body>
- 
+
     <div id="curtain-container">
         <div class="curtain-panel curtain-left"></div>
         <div class="curtain-panel curtain-right"></div>
         <div id="countdown-overlay">3</div>
     </div>
- 
+
     <div id="main-page" class="page">
         <div class="torn-paper-note">❤️Agmal Memories f hayaty heya elly ma3aky</div>
- 
+
         <div class="slider-window">
             <div class="slider-wrapper">
                 <img src="images/1.jpg" alt="صورة 1" class="slide landscape" decoding="async">
@@ -985,7 +893,7 @@
             </div>
             <h3 style="font-weight:900;font-size:18px;color:#EAE0D0;text-shadow:0 2px 6px rgba(0,0,0,0.4);margin-top:6px;">♥️♾️ W hafdl daymn</h3>
         </div>
- 
+
         <div id="music-section">
             <div class="player-card">
                 <div class="top-section">
@@ -1028,13 +936,13 @@
             </div>
             <audio id="audio-player"></audio>
         </div>
- 
+
         <div class="action-row">
             <button class="btn-small" onclick="startMaymayShow()">🎈 Maymay's Day</button>
             <button class="btn-small" onclick="showMessagePage()">💌 Message for Halawyat</button>
         </div>
     </div>
- 
+
     <div id="birthday-page" class="page" style="justify-content: center;">
         <button id="birthday-back-btn" class="back-btn" onclick="showPage('main-page')" style="position: absolute; top: 15px; right: 15px; display: none;">← Back</button>
         <div class="circle-stage" id="circle-stage">
@@ -1079,13 +987,12 @@
                 <span class="gift-hint">Akher wahda..Gahza!!🫣</span>
             </div>
         </div>
-        <!-- تم استخدام فئة torn-paper-box المخصصة لتكون بنفس شكل الورقة المقصوصة تماماً -->
         <div class="torn-paper-box" id="torn-paper-box">
             <span id="typewriter-text"></span>
         </div>
         <button id="continue-btn" class="btn-small" style="display: none; margin-top: 10px; font-size: 14px; padding: 8px 20px;" onclick="showPage('birthday-details-page')">😂 Click on beida</button>
     </div>
- 
+
     <div id="birthday-details-page" class="page">
         <button class="back-btn" onclick="showPage('birthday-page')">← Back</button>
         <div class="sub-card">
@@ -1097,19 +1004,17 @@
             <p>❤️Bamout feky ya halawyat❤️</p>
         </div>
     </div>
- 
+
+    <!-- صفحة Message for Halawyat المعدلة (في المنتصف تماماً + ورد أسرع) -->
     <div id="msg-page" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← Back</button>
- 
+
         <div class="message-envelope-page" id="messageEnvelopePage">
-            <img class="flower-sticker flower-left" src="images/flower-left.png" alt="" decoding="async">
-            <img class="flower-sticker flower-right" src="images/flower-right.png" alt="" decoding="async">
- 
             <div class="envelope-wrapper" id="envelopeWrapper">
                 <img class="envelope-image" src="images/envelope.png" alt="Envelope" decoding="async">
- 
+
                 <div class="envelope-title">For You <span>❤️</span></div>
- 
+
                 <div class="letter-content" id="letterContent">
                     <p>من اول يوم شوفتك فيه و انا مش مستوعب قد ايه ممكن بني ادمه تكون بالجمال ده عشان عمري ما شوفت ولا هشوف حاجه اجمل منك زي ما اكون كنت بدور عليكي</p>
                     <p>و بعد ما عرفتك اكتر اتعلقت بيكي و مبقاش ينفع يعدي يوم من غير ما اكلمك و كنت بستنى اشوفك و كنت كل مره اشوفك فيها بقع على وشي اكتر لحد ما اكتشفت انتي ايه بالنسبالي و مبقتش اعرف اعيش من غيرك</p>
@@ -1119,7 +1024,7 @@
             </div>
         </div>
     </div>
- 
+
     <div id="welcome-screen">
         <img src="images/childhood_couple.jpg" alt="Our Childhood" style="width: 200px; height: 200px; border-radius: 50%; border: 4px solid #EAE0D0; box-shadow: 0 8px 20px rgba(0,0,0,0.5); margin-bottom: 20px; object-fit: cover;" decoding="async">
         <p style="color: #EAE0D0; font-size: 18px; margin-bottom: 25px; font-family: 'Cairo', sans-serif; font-weight: bold;">? Would you like to open your gift</p>
@@ -1131,7 +1036,7 @@
             <img src="images/no_photo.jpg" alt="No Photo" style="width: 130px; height: auto; background: transparent; border: none; box-shadow: none; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));" decoding="async">
         </div>
     </div>
- 
+
     <div id="login-overlay">
         <h1 class="safe-title">My Dearest<br>Mayaa</h1>
         <div class="login-box">
@@ -1159,65 +1064,35 @@
             <p id="error-msg">Ghalat ... Rakezy ya halawyat!</p>
         </div>
     </div>
- 
+
     <script>
-        /* ============================================================
-           PERFORMANCE: Preload + decode the orbit/center images
-           ------------------------------------------------------------
-           PROBLEM FOUND: the 5 orbit photos were already in the initial
-           HTML (good — the browser starts fetching them at page load),
-           but nothing forced them to be fully *decoded* ahead of time,
-           and images/child.png was not in the DOM at all until
-           openGiftBox() set spotImg.src on the fly. Decoding a JPEG/PNG
-           is real CPU work; doing it for the first time at the exact
-           moment the image needs to be painted (while a transform/
-           opacity animation is running) is exactly what was causing the
-           stutter when each photo appeared and when the final center
-           image appeared.
- 
-           FIX: as soon as the script runs (long before the visitor even
-           reaches the birthday page — they still have to enter the PIN
-           and tap through the welcome screen first), we create off-DOM
-           Image() objects for all 5 orbit photos + the final center
-           image and call .decode() on each. decode() resolves once the
-           bitmap is fully decoded and ready to paint, so by the time
-           startMaymayShow() actually runs, the browser can reuse the
-           already-decoded bitmap instead of decoding again.
- 
-           We race this against a short timeout so a slow connection or
-           a missing file can never block the "Maymay's Day" button —
-           the show will still play, it just won't have had the head
-           start in the (unlikely) case preloading hasn't finished yet.
-           ============================================================ */
         const ORBIT_PHOTO_SOURCES = [
             'images/Halawyat.jpg',
             'images/Mrs Mayaa.jpg',
             'images/Halabo2a.jpg',
             'images/Halawa.jpg',
             'images/My veiw.jpg',
-            'images/child.png' // final center image, revealed in openGiftBox()
+            'images/child.png'
         ];
- 
+
         function preloadAndDecode(sources) {
             const loaders = sources.map(src => {
                 const img = new Image();
                 img.decoding = 'async';
                 img.src = src;
                 if (img.decode) {
-                    // Decodes without blocking the main thread where supported.
                     return img.decode().catch(() => {});
                 }
-                // Fallback for browsers without HTMLImageElement.decode().
                 return new Promise(resolve => {
                     img.onload = resolve;
-                    img.onerror = resolve; // never let one bad file block the site
+                    img.onerror = resolve;
                 });
             });
             return Promise.all(loaders);
         }
- 
+
         const orbitImagesReady = preloadAndDecode(ORBIT_PHOTO_SOURCES);
- 
+
         const playlist = [
             { src: "images/song.mp3", duration: 546 },
             { src: "images/kelma.mp3", duration: 244 },
@@ -1230,17 +1105,16 @@
         const progressFill = document.getElementById("progress-fill");
         const currentTimeEl = document.getElementById("current-time");
         const totalDurationEl = document.getElementById("total-duration");
-        // PERF: cached once instead of re-querying the DOM every time a track loads.
         const playlistItems = document.querySelectorAll(".playlist li");
         let transitionTimeout = null;
- 
+
         function formatTime(seconds) {
             if (isNaN(seconds) || seconds < 0) return "0:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
- 
+
         function loadTrack(index) {
             currentTrackIndex = index;
             audio.pause();
@@ -1256,7 +1130,7 @@
             if (progressFill) progressFill.style.width = "0%";
             currentTimeEl.innerText = "0:00";
         }
- 
+
         function togglePlay() {
             const playSvg = playBtn.querySelector("svg");
             if (audio.paused) {
@@ -1270,7 +1144,7 @@
                 playSvg.innerHTML = '<path d="M6.5 4.5C6.5 3.8 7.2 3.4 7.8 3.8L19.3 11.3C19.9 11.7 19.9 12.6 19.3 13L7.8 20.5C7.2 20.9 6.5 20.5 6.5 19.8V4.5Z"/>';
             }
         }
- 
+
         function playSelectedTrack(index) {
             if (transitionTimeout) clearTimeout(transitionTimeout);
             audio.pause();
@@ -1283,17 +1157,17 @@
                 }).catch(e => console.log("Play failed:", e));
             }, 300);
         }
- 
+
         function nextTrack() {
             let nextIndex = (currentTrackIndex + 1) % playlist.length;
             playSelectedTrack(nextIndex);
         }
- 
+
         function prevTrack() {
             let prevIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
             playSelectedTrack(prevIndex);
         }
- 
+
         audio.addEventListener("timeupdate", () => {
             const duration = audio.duration || playlist[currentTrackIndex].duration;
             const current = audio.currentTime;
@@ -1306,9 +1180,9 @@
             const remaining = duration - current;
             totalDurationEl.innerText = "-" + formatTime(remaining > 0 ? remaining : 0);
         });
- 
+
         audio.addEventListener("ended", () => { nextTrack(); });
- 
+
         audio.addEventListener("loadedmetadata", () => {
             if (audio.duration && isFinite(audio.duration)) {
                 playlist[currentTrackIndex].duration = audio.duration;
@@ -1316,19 +1190,18 @@
                 totalDurationEl.innerText = "-" + formatTime(remaining);
             }
         });
- 
+
         function seekSong(val) {
             const duration = audio.duration || playlist[currentTrackIndex].duration;
             if (duration && isFinite(duration)) {
                 audio.currentTime = (val / 100) * duration;
             }
         }
- 
+
         loadTrack(0);
- 
-        // PERF: cached once instead of calling querySelectorAll('.page') on every navigation.
+
         const pages = document.querySelectorAll('.page');
- 
+
         function showPage(pageId) {
             pages.forEach(p => {
                 p.style.display = 'none';
@@ -1345,28 +1218,18 @@
             }
             window.scrollTo(0, 0);
         }
- 
-        /* ============================================================
-           MESSAGE FOR HALAWYAT — entrance animation controller
-           ------------------------------------------------------------
-           Adds the .msg-anim-play class (which drives every keyframe
-           above: envelope fade/scale in, paper rise + Arabic text fade,
-           flower fade-in + sway) each time the page is opened. Removing
-           the class first and forcing a reflow means the ~1.2s entrance
-           replays cleanly every time, even if the user goes back and
-           re-opens the page repeatedly.
-           ============================================================ */
+
         const messageEnvelopePage = document.getElementById('messageEnvelopePage');
- 
+
         function showMessagePage() {
             if (messageEnvelopePage) {
                 messageEnvelopePage.classList.remove('msg-anim-play');
-                void messageEnvelopePage.offsetWidth; // force reflow to restart animations
+                void messageEnvelopePage.offsetWidth;
                 messageEnvelopePage.classList.add('msg-anim-play');
             }
             showPage('msg-page');
         }
- 
+
         const photosData = [
             { src: 'images/Halawyat.jpg', title: 'Halawyat 😍' },
             { src: 'images/Mrs Mayaa.jpg', title: 'Mrs Mayaa 🤓' },
@@ -1374,10 +1237,7 @@
             { src: 'images/Halawa.jpg', title: 'Halawaa 🤩' },
             { src: 'images/My veiw.jpg', title: 'My veiw ❤️😘' }
         ];
- 
-        // PERF: these elements are static and unique on the page, so we grab them
-        // once here instead of re-running getElementById for each of them every
-        // single time startMaymayShow()/openGiftBox() runs.
+
         const orbitRing = document.getElementById('orbit-ring');
         const spotBox = document.getElementById('spotlight-box');
         const curtain = document.getElementById('curtain-container');
@@ -1391,27 +1251,27 @@
         const spotImg = document.getElementById('spotlight-img');
         const spotTitle = document.getElementById('spotlight-title');
         const orbWrappers = [1, 2, 3, 4, 5].map(i => document.getElementById(`orb-${i}`));
- 
+
         let animationTimeouts = [];
- 
+
         function clearShowTimeouts() {
             animationTimeouts.forEach(t => clearTimeout(t));
             animationTimeouts = [];
         }
- 
+
         function startMaymayShow() {
             showPage('birthday-page');
             clearShowTimeouts();
- 
+
             circleStage.classList.remove('expanded');
             tornPaperBox.style.display = 'none';
             typeText.innerHTML = '';
             continueBtn.style.display = 'none';
-            birthdayBackBtn.style.display = 'none'; // ضمان إخفاء زر الباك تماماً عند بداية العرض
+            birthdayBackBtn.style.display = 'none';
             giftBox.style.display = 'flex';
             giftBox.style.opacity = '';
             giftBox.style.pointerEvents = '';
- 
+
             spotImg.src = '';
             spotImg.style.borderRadius = '';
             spotImg.style.boxShadow = '';
@@ -1421,7 +1281,7 @@
             spotImg.classList.remove('wiggle-active');
             spotImg.style.cursor = 'default';
             spotImg.onclick = null;
- 
+
             spotTitle.innerText = '';
             spotTitle.style.backgroundColor = '';
             spotTitle.style.boxShadow = '';
@@ -1429,31 +1289,24 @@
             spotTitle.style.padding = '';
             spotTitle.style.color = '';
             spotTitle.style.textShadow = '';
- 
+
             orbitRing.classList.remove('blurred');
             spotBox.classList.remove('active');
             giftBox.classList.remove('revealed');
- 
+
             orbWrappers.forEach(orb => orb.classList.remove('revealed'));
- 
+
             curtain.style.display = 'block';
             curtain.classList.remove('curtain-open');
             countdownEl.style.display = 'block';
             countdownEl.innerText = '3';
- 
-            // PERF: the curtain is already covering the full screen at this point,
-            // so waiting here is invisible to the visitor. We only delay the actual
-            // countdown/reveal sequence — never the curtain itself — until the
-            // orbit + center images are decoded, or 800ms has passed (whichever
-            // comes first), so the animation that follows never has to decode an
-            // image on the fly. In practice orbitImagesReady has almost always
-            // already resolved by now, since it started as soon as the page loaded.
+
             Promise.race([
                 orbitImagesReady,
                 new Promise(resolve => setTimeout(resolve, 800))
             ]).then(runMaymayShowSequence);
         }
- 
+
         function runMaymayShowSequence() {
             animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '2'; }, 1000));
             animationTimeouts.push(setTimeout(() => { countdownEl.innerText = '1'; }, 2000));
@@ -1464,7 +1317,7 @@
             animationTimeouts.push(setTimeout(() => {
                 curtain.style.display = 'none';
             }, 4800));
- 
+
             function presentPhoto(index, startTime) {
                 animationTimeouts.push(setTimeout(() => {
                     spotImg.src = photosData[index].src;
@@ -1480,26 +1333,22 @@
                     orbWrappers[index].classList.add('revealed');
                 }, startTime + 2500));
             }
- 
+
             presentPhoto(0, 5000);
             presentPhoto(1, 8000);
             presentPhoto(2, 11000);
             presentPhoto(3, 14000);
             presentPhoto(4, 17000);
- 
+
             animationTimeouts.push(setTimeout(() => {
                 giftBox.classList.add('revealed');
             }, 20000));
         }
- 
+
         function openGiftBox() {
             giftBox.classList.remove('revealed');
             setTimeout(() => { giftBox.style.display = 'none'; }, 400);
             circleStage.classList.add('expanded');
-            // NOTE: images/child.png was included in the preload/decode list at the
-            // top of this script, so by the time a visitor has clicked through the
-            // whole 20-second show to reach the gift box, it's already decoded and
-            // ready to paint instantly here — no more frame drop on reveal.
             spotImg.src = 'images/child.png';
             spotImg.style.borderRadius = '0';
             spotImg.style.boxShadow = 'none';
@@ -1540,18 +1389,18 @@
                 } else {
                     setTimeout(() => {
                         continueBtn.style.display = 'flex';
-                        birthdayBackBtn.style.display = 'block'; // إظهار زر الباك فقط بعد انتهاء كل شيء
+                        birthdayBackBtn.style.display = 'block';
                     }, 300);
                 }
             }
             setTimeout(typeLine1, 500);
         }
- 
+
         function toggleNoContent() {
             const content = document.getElementById("inline-no-content");
             content.style.display = content.style.display === "block" ? "none" : "block";
         }
- 
+
         let enteredPin = "";
         function pressKey(num) {
             if (enteredPin.length < 4) {
@@ -1586,12 +1435,12 @@
             updateSlider();
             startAutoSlide();
         }
- 
+
         let currentSlideIndex = 0;
         const slides = document.querySelectorAll(".slide");
         const totalSlides = slides.length;
         let slideInterval;
- 
+
         function updateSlider() {
             slides.forEach((slide, index) => {
                 slide.classList.remove("active", "prev", "next");
@@ -1616,7 +1465,7 @@
             clearInterval(slideInterval);
             startAutoSlide();
         }
- 
+
         const startDate = new Date("2026-04-04T00:00:00").getTime();
         function updateTimer() {
             const now = new Date().getTime();
@@ -1637,4 +1486,3 @@
     </script>
 </body>
 </html>
- 

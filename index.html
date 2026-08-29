@@ -21,9 +21,13 @@
 
         .page {
             min-height: 100vh;
-            min-height: 100svh;
+            min-height: 100svh; /* MOBILE: small-viewport unit handles iOS Safari / Android
+                browser-chrome resizing better than 100vh; unsupported browsers simply
+                ignore this line and keep the 100vh above, so nothing regresses. */
             padding: 25px 12px;
-            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px));
+            padding-bottom: calc(25px + env(safe-area-inset-bottom, 0px)); /* MOBILE: keeps
+                content clear of the home-indicator on notched iPhones; evaluates to the
+                original 25px everywhere else. */
             text-align: center;
             display: none;
             flex-direction: column;
@@ -72,6 +76,7 @@
             clip-path: polygon(0% 4%, 3% 0%, 7% 5%, 12% 1%, 17% 4%, 22% 1%, 28% 5%, 33% 2%, 39% 5%, 44% 1%, 50% 4%, 55% 1%, 61% 5%, 66% 2%, 72% 4%, 77% 1%, 83% 5%, 88% 2%, 94% 4%, 98% 1%, 100% 4%, 99% 15%, 100% 30%, 98% 45%, 100% 60%, 99% 75%, 100% 90%, 98% 97%, 95% 100%, 90% 96%, 85% 99%, 80% 95%, 74% 98%, 68% 95%, 62% 99%, 56% 96%, 50% 99%, 44% 95%, 38% 99%, 32% 96%, 26% 99%, 20% 95%, 14% 99%, 8% 96%, 3% 99%, 0% 96%, 1% 85%, 0% 70%, 2% 55%, 0% 40%, 1% 25%, 0% 10%);
         }
 
+        /* تنسيق الورقة المقصوصة المطابق تماماً لشكل الجملة العلوية */
         .torn-paper-box {
             background-color: #EAE0D0;
             color: #4A121A;
@@ -117,6 +122,10 @@
             padding: 6px 6px 25px 6px;
             border-radius: 12px;
             object-fit: cover;
+            /* PERF: was `transition: all 0.4s ease-in-out`. "all" makes the browser
+               watch every property (including box-shadow / border-radius, which never
+               actually change) for changes each frame. Restricting the transition to
+               transform + opacity keeps this animation on the compositor thread. */
             transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             opacity: 0;
@@ -124,6 +133,10 @@
             z-index: 1;
         }
 
+        /* PERF: will-change is scoped to only the 3 slides that are actually
+           transitioning at any given moment (active/prev/next), not all 14 photos.
+           Promoting every slide to its own GPU layer would waste memory on mobile;
+           promoting only the 3 in motion gets the same smoothness for free. */
         .slide.active, .slide.prev, .slide.next {
             will-change: transform, opacity;
         }
@@ -417,6 +430,9 @@
             align-items: center;
             gap: 6px;
             touch-action: manipulation;
+            /* #6: subtle premium press feedback — transform only (GPU-friendly),
+               short duration, springy-but-restrained easing. Not an infinite/looping
+               animation — it only runs on press/release. */
             transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
         }
 
@@ -512,14 +528,32 @@
             align-items: center;
             transition: transform 0.8s ease;
             max-width: 100%;
+            /* RESPONSIVE: a CSS custom property so we can uniformly rescale the whole
+               orbit (see the media query below) with a single transform instead of
+               resizing the stage and having to recompute every child's translate()
+               value by hand. Default 1 = pixel-identical to the original on any
+               screen wide enough to fit 340px. */
             --orbit-scale: 1;
             transform: translateZ(0) scale(var(--orbit-scale));
+            /* PERF: this element is transformed on "expanded" (and pre-scaled on
+               narrow screens), so it benefits from being on its own compositor layer. */
             will-change: transform;
+            /* PERF: everything that moves in this section (orbit rotation, spotlight,
+               gift box) is absolutely positioned inside this box and never affects
+               anything outside it, so `contain: layout` lets the browser skip
+               recalculating the rest of the page's layout during the animation.
+               (Not `paint`/`strict` — those would clip children and change the look.) */
             contain: layout;
         }
 
         .circle-stage.expanded { transform: translateZ(0) scale(calc(var(--orbit-scale) * 1.1)); }
 
+        /* RESPONSIVE: the fixed 340px stage + 12px page padding overflows on
+           ~360px-wide phones (iPhone SE / small Android). Rather than resizing the
+           stage — which would require recalculating every orb-N translate() value
+           and could look different from the original — we scale the whole group
+           down uniformly. The circular shape, relative positions, rotation
+           direction and speed all stay exactly the same, just smaller. */
         @media (max-width: 360px) {
             .circle-stage { --orbit-scale: 0.82; }
         }
@@ -542,6 +576,10 @@
             top: 50%; left: 50%;
             margin-top: -50px; margin-left: -40px;
             opacity: 0; transform: scale(0);
+            /* PERF: was `transition: all 0.5s ease`. Scoping this to the two
+               properties that actually change (transform, opacity) keeps the
+               center -> orbit move on the compositor instead of the browser
+               re-checking every property (box-shadow, etc.) on every frame. */
             transition: transform 0.5s ease, opacity 0.5s ease;
             display: flex; flex-direction: column; align-items: center;
             will-change: transform, opacity;
@@ -668,24 +706,42 @@
         /* ============================================================
            MESSAGE FOR HALAWYAT — envelope.png based design
            ------------------------------------------------------------
-           تم تعديل الـ margin والـ positioning هنا ليصبح الظرف
-           في منتصف شاشة الموبايل بالظبط عمودياً وأفقياً.
+           Dedicated classes only (message-envelope-page, envelope-wrapper,
+           envelope-image, envelope-title, letter-content, flower-sticker,
+           flower-left, flower-right) — nothing shared with .sub-card,
+           .btn-small, .back-btn, etc. is touched or overridden.
+
+           The envelope itself is the actual envelope.png asset (not
+           CSS-drawn), scaled with width:100%/height:auto so its exact
+           proportions, folds, colors and shadow are preserved at every
+           screen size. Text is positioned with percentage offsets
+           calibrated against the real image (paper visible from ~4% to
+           ~67% of the image height, ~16%–80% of its width; the solid
+           pink flap area for the "For You" label sits around ~81% down).
            ============================================================ */
+        /* Vertically centers the envelope scene in the available viewport
+           height on the Message page specifically — scoped to the #msg-page
+           ID only, so the shared .page rules used by every other page
+           (main, birthday, etc.) are completely untouched. */
+        #msg-page {
+            justify-content: center;
+        }
+
         .message-envelope-page {
             position: relative;
             width: 100%;
             max-width: 420px;
-            margin: auto auto; /* يحافظ عليه في المنتصف تماماً عمودياً */
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            padding-top: 4px;
         }
 
         .envelope-wrapper {
             position: relative;
             width: min(320px, 80vw);
-            margin: 0 auto;
+            margin: 10px auto 0;
             opacity: 0;
             transform: scale(0.92) translateY(6px);
         }
@@ -699,12 +755,14 @@
         .envelope-image {
             display: block;
             width: 100%;
-            height: auto;
+            height: auto; /* keeps the exact 447:559 aspect ratio of envelope.png */
             filter: drop-shadow(0 16px 24px rgba(0,0,0,0.35));
             pointer-events: none;
             -webkit-user-drag: none;
         }
 
+        /* "For You ❤️" — sits ON the pink flap of the envelope image itself,
+           not on the paper. Calibrated to the solid lower-flap area. */
         .envelope-title {
             position: absolute;
             left: 50%;
@@ -724,6 +782,7 @@
         }
         @keyframes msgFadeIn { to { opacity: 1; } }
 
+        /* The Arabic message — sits ONLY inside the visible white paper area. */
         .letter-content {
             position: absolute;
             left: 17%;
@@ -754,6 +813,7 @@
         }
         .letter-content p:last-child { margin-bottom: 0; }
 
+        /* Flower bouquet stickers */
         .flower-sticker {
             position: absolute;
             top: -2%;
@@ -763,27 +823,34 @@
             pointer-events: none;
             filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35));
             z-index: 3;
+            /* PERF: promotes the flower onto its own compositor layer ahead of
+               time so the rotate() sway never triggers a layout/paint on the
+               main thread mid-animation — this is what removes the lag/stutter
+               on lower-power phones. transform-only animation + will-change
+               + a static translateZ(0) baseline keeps it purely on the GPU. */
+            will-change: transform;
+            backface-visibility: hidden;
+            transform: translateZ(0);
         }
         .flower-left  { left: -1%;  transform-origin: 50% 4%; }
         .flower-right { right: -1%; transform-origin: 50% 4%; }
 
-        /* تم تسريع حركة الورد (من 4.6s/5.2s إلى 3.4s/3.8s لتبدو أسرع وأكثر حيوية) */
         .msg-anim-play .flower-left {
             animation: flowerFadeIn 0.5s ease-out 0.15s forwards,
-                       swayLeft 3.4s ease-in-out 1.15s infinite;
+                       swayLeft 2.2s ease-in-out 0.65s infinite;
         }
         .msg-anim-play .flower-right {
             animation: flowerFadeIn 0.5s ease-out 0.25s forwards,
-                       swayRight 3.8s ease-in-out 1.25s infinite;
+                       swayRight 2.5s ease-in-out 0.75s infinite;
         }
         @keyframes flowerFadeIn { to { opacity: 1; } }
         @keyframes swayLeft {
-            0%, 100% { transform: rotate(-5deg); }
-            50%      { transform: rotate(5deg); }
+            0%, 100% { transform: translateZ(0) rotate(-4deg); }
+            50%      { transform: translateZ(0) rotate(4deg); }
         }
         @keyframes swayRight {
-            0%, 100% { transform: rotate(5deg); }
-            50%      { transform: rotate(-5deg); }
+            0%, 100% { transform: translateZ(0) rotate(4deg); }
+            50%      { transform: translateZ(0) rotate(-4deg); }
         }
 
         @media (max-width: 380px) {
@@ -791,7 +858,22 @@
             .flower-sticker { width: clamp(54px, 17vw, 78px); }
         }
 
+        /* ============================================================
+           MOBILE POLISH (max-width: 600px)
+           ------------------------------------------------------------
+           Everything below only applies to phones / small tablets.
+           Desktop (above 600px) keeps every rule above completely
+           untouched — colors, fonts, sizes, and the countdown/slider
+           layout on desktop are unchanged.
+           ============================================================ */
         @media (max-width: 600px) {
+
+            /* #7 Spacing: these cards were capped at 340-360px while the
+               page itself allows more width on 390-430px phones, which is
+               what created the dead space on the sides. Letting them grow
+               up to 440px (but never past 100% of the available width)
+               makes the page use the screen properly without touching
+               colors, content, or the desktop layout. */
             .torn-paper-note,
             .torn-paper-box,
             #timer-section,
@@ -799,6 +881,11 @@
             .sub-card {
                 max-width: min(440px, 100%);
             }
+
+            /* #3 The 14-image slider: ~13% larger + taller cards so the
+               section reads as a proper visual centerpiece on mobile,
+               without growing so large it swallows the surrounding UI.
+               Still transform/opacity-driven, nothing new animated. */
             .slider-window {
                 max-width: min(320px, 94vw);
             }
@@ -817,8 +904,18 @@
                 width: 272px !important;
                 height: 300px !important;
             }
+            /* Neighbor "peek" offset scaled up to match the larger card
+               width, so prev/next cards peek out by the same proportion
+               as before (was -90px/90px on a 230px-wide card). */
             .slide.next { transform: translateX(-100px) scale(0.75); }
             .slide.prev { transform: translateX(100px) scale(0.75); }
+
+            /* #4 Arrows: verified — right-btn already shows a right-pointing
+               chevron (&#10095;) and calls moveSlide(1) (next); left-btn
+               already shows a left-pointing chevron (&#10094;) and calls
+               moveSlide(-1) (previous). Direction was already correct, so
+               only touch comfort is improved here: ~44px tap targets,
+               pulled in 2px so they never sit flush against the screen edge. */
             .nav-btn {
                 width: 44px;
                 height: 44px;
@@ -826,6 +923,13 @@
             }
             .right-btn { right: 2px; }
             .left-btn { left: 2px; }
+
+            /* #2 Countdown: 2x2 grid instead of one row. The HTML order is
+               already Days, Hours, Minutes, Seconds, so a simple 2-column
+               grid lays out exactly as:
+                   DAYS   HOURS
+                   MINS   SECS
+               with zero changes to the markup. */
             .timer-container {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -845,6 +949,10 @@
                 font-size: 11px;
                 letter-spacing: 0.5px;
             }
+
+            /* Message page: keep the envelope comfortably framed with
+               room for the flower stickers at the corners on narrow
+               iPhone/Android widths. */
             .message-envelope-page { max-width: min(400px, 100%); }
             .envelope-wrapper { width: min(280px, 76vw); }
         }
@@ -987,6 +1095,7 @@
                 <span class="gift-hint">Akher wahda..Gahza!!🫣</span>
             </div>
         </div>
+        <!-- تم استخدام فئة torn-paper-box المخصصة لتكون بنفس شكل الورقة المقصوصة تماماً -->
         <div class="torn-paper-box" id="torn-paper-box">
             <span id="typewriter-text"></span>
         </div>
@@ -1005,11 +1114,13 @@
         </div>
     </div>
 
-    <!-- صفحة Message for Halawyat المعدلة (في المنتصف تماماً + ورد أسرع) -->
     <div id="msg-page" class="page">
         <button class="back-btn" onclick="showPage('main-page')">← Back</button>
 
         <div class="message-envelope-page" id="messageEnvelopePage">
+            <img class="flower-sticker flower-left" src="images/flower-left.png" alt="" decoding="async">
+            <img class="flower-sticker flower-right" src="images/flower-right.png" alt="" decoding="async">
+
             <div class="envelope-wrapper" id="envelopeWrapper">
                 <img class="envelope-image" src="images/envelope.png" alt="Envelope" decoding="async">
 
@@ -1066,13 +1177,41 @@
     </div>
 
     <script>
+        /* ============================================================
+           PERFORMANCE: Preload + decode the orbit/center images
+           ------------------------------------------------------------
+           PROBLEM FOUND: the 5 orbit photos were already in the initial
+           HTML (good — the browser starts fetching them at page load),
+           but nothing forced them to be fully *decoded* ahead of time,
+           and images/child.png was not in the DOM at all until
+           openGiftBox() set spotImg.src on the fly. Decoding a JPEG/PNG
+           is real CPU work; doing it for the first time at the exact
+           moment the image needs to be painted (while a transform/
+           opacity animation is running) is exactly what was causing the
+           stutter when each photo appeared and when the final center
+           image appeared.
+
+           FIX: as soon as the script runs (long before the visitor even
+           reaches the birthday page — they still have to enter the PIN
+           and tap through the welcome screen first), we create off-DOM
+           Image() objects for all 5 orbit photos + the final center
+           image and call .decode() on each. decode() resolves once the
+           bitmap is fully decoded and ready to paint, so by the time
+           startMaymayShow() actually runs, the browser can reuse the
+           already-decoded bitmap instead of decoding again.
+
+           We race this against a short timeout so a slow connection or
+           a missing file can never block the "Maymay's Day" button —
+           the show will still play, it just won't have had the head
+           start in the (unlikely) case preloading hasn't finished yet.
+           ============================================================ */
         const ORBIT_PHOTO_SOURCES = [
             'images/Halawyat.jpg',
             'images/Mrs Mayaa.jpg',
             'images/Halabo2a.jpg',
             'images/Halawa.jpg',
             'images/My veiw.jpg',
-            'images/child.png'
+            'images/child.png' // final center image, revealed in openGiftBox()
         ];
 
         function preloadAndDecode(sources) {
@@ -1081,11 +1220,13 @@
                 img.decoding = 'async';
                 img.src = src;
                 if (img.decode) {
+                    // Decodes without blocking the main thread where supported.
                     return img.decode().catch(() => {});
                 }
+                // Fallback for browsers without HTMLImageElement.decode().
                 return new Promise(resolve => {
                     img.onload = resolve;
-                    img.onerror = resolve;
+                    img.onerror = resolve; // never let one bad file block the site
                 });
             });
             return Promise.all(loaders);
@@ -1105,6 +1246,7 @@
         const progressFill = document.getElementById("progress-fill");
         const currentTimeEl = document.getElementById("current-time");
         const totalDurationEl = document.getElementById("total-duration");
+        // PERF: cached once instead of re-querying the DOM every time a track loads.
         const playlistItems = document.querySelectorAll(".playlist li");
         let transitionTimeout = null;
 
@@ -1200,6 +1342,7 @@
 
         loadTrack(0);
 
+        // PERF: cached once instead of calling querySelectorAll('.page') on every navigation.
         const pages = document.querySelectorAll('.page');
 
         function showPage(pageId) {
@@ -1219,12 +1362,22 @@
             window.scrollTo(0, 0);
         }
 
+        /* ============================================================
+           MESSAGE FOR HALAWYAT — entrance animation controller
+           ------------------------------------------------------------
+           Adds the .msg-anim-play class (which drives every keyframe
+           above: envelope fade/scale in, paper rise + Arabic text fade,
+           flower fade-in + sway) each time the page is opened. Removing
+           the class first and forcing a reflow means the ~1.2s entrance
+           replays cleanly every time, even if the user goes back and
+           re-opens the page repeatedly.
+           ============================================================ */
         const messageEnvelopePage = document.getElementById('messageEnvelopePage');
 
         function showMessagePage() {
             if (messageEnvelopePage) {
                 messageEnvelopePage.classList.remove('msg-anim-play');
-                void messageEnvelopePage.offsetWidth;
+                void messageEnvelopePage.offsetWidth; // force reflow to restart animations
                 messageEnvelopePage.classList.add('msg-anim-play');
             }
             showPage('msg-page');
@@ -1238,6 +1391,9 @@
             { src: 'images/My veiw.jpg', title: 'My veiw ❤️😘' }
         ];
 
+        // PERF: these elements are static and unique on the page, so we grab them
+        // once here instead of re-running getElementById for each of them every
+        // single time startMaymayShow()/openGiftBox() runs.
         const orbitRing = document.getElementById('orbit-ring');
         const spotBox = document.getElementById('spotlight-box');
         const curtain = document.getElementById('curtain-container');
@@ -1267,7 +1423,7 @@
             tornPaperBox.style.display = 'none';
             typeText.innerHTML = '';
             continueBtn.style.display = 'none';
-            birthdayBackBtn.style.display = 'none';
+            birthdayBackBtn.style.display = 'none'; // ضمان إخفاء زر الباك تماماً عند بداية العرض
             giftBox.style.display = 'flex';
             giftBox.style.opacity = '';
             giftBox.style.pointerEvents = '';
@@ -1301,6 +1457,13 @@
             countdownEl.style.display = 'block';
             countdownEl.innerText = '3';
 
+            // PERF: the curtain is already covering the full screen at this point,
+            // so waiting here is invisible to the visitor. We only delay the actual
+            // countdown/reveal sequence — never the curtain itself — until the
+            // orbit + center images are decoded, or 800ms has passed (whichever
+            // comes first), so the animation that follows never has to decode an
+            // image on the fly. In practice orbitImagesReady has almost always
+            // already resolved by now, since it started as soon as the page loaded.
             Promise.race([
                 orbitImagesReady,
                 new Promise(resolve => setTimeout(resolve, 800))
@@ -1349,6 +1512,10 @@
             giftBox.classList.remove('revealed');
             setTimeout(() => { giftBox.style.display = 'none'; }, 400);
             circleStage.classList.add('expanded');
+            // NOTE: images/child.png was included in the preload/decode list at the
+            // top of this script, so by the time a visitor has clicked through the
+            // whole 20-second show to reach the gift box, it's already decoded and
+            // ready to paint instantly here — no more frame drop on reveal.
             spotImg.src = 'images/child.png';
             spotImg.style.borderRadius = '0';
             spotImg.style.boxShadow = 'none';
@@ -1389,7 +1556,7 @@
                 } else {
                     setTimeout(() => {
                         continueBtn.style.display = 'flex';
-                        birthdayBackBtn.style.display = 'block';
+                        birthdayBackBtn.style.display = 'block'; // إظهار زر الباك فقط بعد انتهاء كل شيء
                     }, 300);
                 }
             }
